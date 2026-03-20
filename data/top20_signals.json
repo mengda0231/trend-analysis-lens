@@ -1,0 +1,22 @@
+[
+  {"rank": 1, "name": "超捷股份", "ts_code": "301005.SZ", "date": "2025-12-17", "type": "确认", "entry": 92.85, "exit": 189.00, "return": 103.55, "max_return": 134.58},
+  {"rank": 2, "name": "美力科技", "ts_code": "300611.SZ", "date": "2025-02-25", "type": "确认", "entry": 16.77, "exit": 27.30, "return": 62.79, "max_return": 97.67},
+  {"rank": 3, "name": "横河精密", "ts_code": "300539.SZ", "date": "2025-09-02", "type": "确认", "entry": 29.01, "exit": 46.68, "return": 60.91, "max_return": 70.46},
+  {"rank": 4, "name": "招商轮船", "ts_code": "601872.SH", "date": "2026-01-30", "type": "确认", "entry": 10.79, "exit": 16.24, "return": 50.51, "max_return": 50.51},
+  {"rank": 5, "name": "唐源电气", "ts_code": "300789.SZ", "date": "2025-02-25", "type": "确认", "entry": 18.55, "exit": 27.49, "return": 48.19, "max_return": 50.13},
+  {"rank": 6, "name": "京源环保", "ts_code": "688096.SH", "date": "2025-02-25", "type": "确认", "entry": 9.95, "exit": 13.79, "return": 38.59, "max_return": 60.60},
+  {"rank": 7, "name": "康众医疗", "ts_code": "688607.SH", "date": "2025-12-10", "type": "预警", "entry": 33.62, "exit": 44.99, "return": 33.82, "max_return": 36.23},
+  {"rank": 8, "name": "唐源电气", "ts_code": "300789.SZ", "date": "2025-02-18", "type": "确认", "entry": 17.99, "exit": 23.61, "return": 31.24, "max_return": 31.24},
+  {"rank": 9, "name": "ST华西", "ts_code": "002630.SZ", "date": "2025-02-25", "type": "确认", "entry": 4.36, "exit": 5.60, "return": 28.44, "max_return": 28.44},
+  {"rank": 10, "name": "雅运股份", "ts_code": "603790.SH", "date": "2025-02-26", "type": "预警", "entry": 12.38, "exit": 15.85, "return": 28.03, "max_return": 32.23},
+  {"rank": 11, "name": "金鸿顺", "ts_code": "603922.SH", "date": "2024-09-23", "type": "确认", "entry": 18.18, "exit": 22.50, "return": 23.76, "max_return": 27.34},
+  {"rank": 12, "name": "永东股份", "ts_code": "002753.SZ", "date": "2024-09-23", "type": "确认", "entry": 6.31, "exit": 7.80, "return": 23.61, "max_return": 27.42},
+  {"rank": 13, "name": "华光环能", "ts_code": "600475.SH", "date": "2024-09-23", "type": "确认", "entry": 9.34, "exit": 11.50, "return": 23.13, "max_return": 23.98},
+  {"rank": 14, "name": "科达制造", "ts_code": "600499.SH", "date": "2024-09-23", "type": "确认", "entry": 7.97, "exit": 9.78, "return": 22.71, "max_return": 27.10},
+  {"rank": 15, "name": "外高桥", "ts_code": "600648.SH", "date": "2024-09-23", "type": "确认", "entry": 11.17, "exit": 13.58, "return": 21.58, "max_return": 24.71},
+  {"rank": 16, "name": "康尼机电", "ts_code": "603111.SH", "date": "2024-09-23", "type": "确认", "entry": 5.95, "exit": 7.18, "return": 20.67, "max_return": 22.35},
+  {"rank": 17, "name": "东方电子", "ts_code": "000682.SZ", "date": "2024-09-23", "type": "确认", "entry": 8.85, "exit": 10.65, "return": 20.34, "max_return": 21.92},
+  {"rank": 18, "name": "中粮糖业", "ts_code": "600737.SH", "date": "2024-09-23", "type": "确认", "entry": 9.73, "exit": 11.70, "return": 20.25, "max_return": 22.51},
+  {"rank": 19, "name": "新华百货", "ts_code": "600785.SH", "date": "2024-09-23", "type": "确认", "entry": 11.87, "exit": 14.25, "return": 20.05, "max_return": 22.66},
+  {"rank": 20, "name": "光线传媒", "ts_code": "300251.SZ", "date": "2024-09-23", "type": "确认", "entry": 7.70, "exit": 9.20, "return": 19.48, "max_return": 20.91}
+]
