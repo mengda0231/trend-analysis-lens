@@ -1,0 +1,28 @@
+{
+  "version": "v1.0",
+  "backtest_period": "2023-01-01 至 2026-03-20",
+  "total_stocks": 5490,
+  "signals_found": 0,
+  "note": "v1.0策略条件严格（形态+成交量双重过滤），三年回测未发现同时满足所有条件的信号。建议：1)放宽成交量条件 2)或等待市场出现典型杯柄形态",
+  "params": {
+    "cup_depth": "14-26%",
+    "handle_depth": "≤22%",
+    "cup_days": "≥15",
+    "handle_days": "≥5",
+    "distance_to_rim": "≤3%",
+    "volume_handle": "<40% of cup body",
+    "volume_approach": ">15% and <100% of cup body"
+  },
+  "analysis": {
+    "reason": "A股市场杯柄形态较少，叠加成交量条件后信号极为稀缺",
+    "suggestion": "建议放宽至v1.1：仅检测形态，成交量作为辅助参考"
+  },
+  "signals": [],
+  "summary": {
+    "total_signals": 0,
+    "warning_signals": 0,
+    "confirm_signals": 0,
+    "win_rate": 0,
+    "avg_return": 0
+  }
+}
