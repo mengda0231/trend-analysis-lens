@@ -42,6 +42,9 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
+                    <button onclick="showPage('strategy-v17')" class="px-3 py-1.5 bg-yellow-600/80 hover:bg-yellow-600 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-crown mr-1"></i>v1.7报告
+                    </button>
                     <button onclick="showPage('strategy-v11')" class="px-3 py-1.5 bg-purple-600/80 hover:bg-purple-600 rounded-lg text-sm font-medium transition-colors">
                         <i class="fas fa-rocket mr-1"></i>v1.1策略
                     </button>
@@ -1149,6 +1152,20 @@
                     }
                 }
             });
+        }
+
+        // 切换完整列表
+        function toggleFullList() {
+            const topSignals = document.getElementById('topSignals');
+            const fullSignals = document.getElementById('fullSignals');
+            
+            if (fullSignals.classList.contains('hidden')) {
+                topSignals.classList.add('hidden');
+                fullSignals.classList.remove('hidden');
+            } else {
+                fullSignals.classList.add('hidden');
+                topSignals.classList.remove('hidden');
+            }
         }
 
         // 初始化
