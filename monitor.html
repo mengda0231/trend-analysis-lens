@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 协作监控中心 - OpenClaw Lens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0f172a; color: #e2e8f0; }
+        .gradient-text { background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(71, 85, 105, 0.5); }
+        .card-hover:hover { background: rgba(30, 41, 59, 0.8); border-color: rgba(59, 130, 246, 0.5); }
+        .status-running { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .agent-node { transition: all 0.3s ease; }
+        .agent-node:hover { transform: scale(1.05); }
+        .message-bubble { position: relative; }
+        .message-bubble::before { content: ''; position: absolute; left: -8px; top: 12px; border: 8px solid transparent; border-right-color: rgba(59, 130, 246, 0.2); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900">
+    <!-- Header -->
+    <header class="bg-slate-800/80 backdrop-blur-xl border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-network-wired text-2xl text-blue-500"></i>
+                    <h1 class="text-2xl font-bold gradient-text">Agent 协作监控中心</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 text-sm text-slate-400">
+                        <span class="w-2 h-2 bg-green-500 rounded-full status-running"></span>
+                        <span>实时监控中</span>
+                    </div>
+                    <button onclick="refreshData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>刷新
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="stats-container">
+            <!-- 动态加载统计卡片 -->
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex gap-2 mb-6 border-b border-slate-700">
+            <button onclick="switchTab('overview')" id="tab-overview" class="px-4 py-3 text-sm font-medium border-b-2 border-blue-500 text-blue-400">
+                <i class="fas fa-chart-line mr-2"></i>总览
+            </button>
+            <button onclick="switchTab('tasks')" id="tab-tasks" class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                <i class="fas fa-tasks mr-2"></i>任务列表
+            </button>
+            <button onclick="switchTab('agents')" id="tab-agents" class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                <i class="fas fa-robot mr-2"></i>Agent 状态
+            </button>
+            <button onclick="switchTab('messages')" id="tab-messages" class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                <i class="fas fa-comments mr-2"></i>协作讨论
+            </button>
+            <button onclick="switchTab('logs')" id="tab-logs" class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                <i class="fas fa-terminal mr-2"></i>执行日志
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="content-area">
+            <!-- 动态加载内容 -->
+        </div>
+    </main>
+
+    <script>
+        // 全局状态
+        let currentTab = 'overview';
+        let dashboardData = null;
+        let refreshInterval = null;
+
+        // 模拟数据（实际应从 API 获取）
+        const mockData = {
+            stats: {
+                total_tasks: 4,
+                running_tasks: 2,
+                completed_tasks: 1,
+                failed_tasks: 0,
+                total_agents: 3,
+                busy_agents: 2
+            },
+            recent_tasks: [
+                {
+                    id: "task-001",
+                    name: "v6.6回测优化",
+                    description: "优化杯柄策略参数，提高胜率",
+                    agent_type: "main",
+                    status: "running",
+                    progress: 45,
+                    created_at: "2026-03-20T23:20:00",
+                    sub_tasks: [
+                        { id: "sub-001", name: "参数优化", agent_id: "SubAgent-1", status: "running", progress: 60 },
+                        { id: "sub-002", name: "回测执行", agent_id: "SubAgent-2", status: "pending", progress: 0 },
+                        { id: "sub-003", name: "结果分析", agent_id: "SubAgent-3", status: "pending", progress: 0 }
+                    ]
+                },
+                {
+                    id: "task-002",
+                    name: "每日数据更新",
+                    description: "更新股票日线数据",
+                    agent_type: "main",
+                    status: "completed",
+                    progress: 100,
+                    created_at: "2026-03-20T18:00:00",
+                    completed_at: "2026-03-20T18:05:00"
+                }
+            ],
+            agents: [
+                { id: "main-001", name: "MainAgent", agent_type: "main", status: "busy", current_task: "task-001", capabilities: ["任务规划", "协调管理"] },
+                { id: "sub-001", name: "SubAgent-1", agent_type: "sub", status: "busy", current_task: "sub-001", capabilities: ["参数优化", "回测执行"] },
+                { id: "sub-002", name: "SubAgent-2", agent_type: "sub", status: "idle", current_task: null, capabilities: ["数据分析", "结果验证"] },
+                { id: "sub-003", name: "SubAgent-3", agent_type: "sub", status: "idle", current_task: null, capabilities: ["报告生成"] }
+            ],
+            messages: [
+                { id: "msg-001", task_id: "task-001", from_agent: "MainAgent", to_agent: "SubAgent-1", content: "开始参数优化任务，测试杯深15-25%范围", msg_type: "assign", timestamp: "23:20:05" },
+                { id: "msg-002", task_id: "task-001", from_agent: "SubAgent-1", to_agent: "MainAgent", content: "收到，开始执行参数优化", msg_type: "ack", timestamp: "23:20:08" },
+                { id: "msg-003", task_id: "task-001", from_agent: "SubAgent-1", to_agent: "SubAgent-2", content: "参数优化完成，最优杯深18-24%，胜率56.2%", msg_type: "discuss", timestamp: "23:25:30" },
+                { id: "msg-004", task_id: "task-001", from_agent: "SubAgent-2", to_agent: "SubAgent-1", content: "收到，开始回测验证", msg_type: "ack", timestamp: "23:25:35" },
+                { id: "msg-005", task_id: "task-001", from_agent: "SubAgent-2", to_agent: "All", content: "回测完成：信号523个，胜率56.2% ✅", msg_type: "result", timestamp: "23:30:00" }
+            ],
+            logs: [
+                { id: "log-001", task_id: "task-001", agent_id: "MainAgent", level: "info", message: "创建任务 v6.6回测优化", timestamp: "23:20:01" },
+                { id: "log-002", task_id: "task-001", agent_id: "MainAgent", level: "info", message: "分配子任务给 SubAgent-1", timestamp: "23:20:02" },
+                { id: "log-003", task_id: "sub-001", agent_id: "SubAgent-1", level: "info", message: "开始执行参数优化", timestamp: "23:20:05" },
+                { id: "log-004", task_id: "sub-001", agent_id: "SubAgent-1", level: "info", message: "进度 20% - 测试参数组合1/5", timestamp: "23:21:00" },
+                { id: "log-005", task_id: "sub-001", agent_id: "SubAgent-1", level: "info", message: "进度 40% - 测试参数组合2/5", timestamp: "23:22:30" },
+                { id: "log-006", task_id: "sub-001", agent_id: "SubAgent-1", level: "info", message: "进度 60% - 发现最优参数", timestamp: "23:25:00" }
+            ]
+        };
+
+        // 初始化
+        function init() {
+            loadData();
+            startAutoRefresh();
+        }
+
+        // 加载数据
+        function loadData() {
+            // 实际应从 API 获取: fetch('/api/dashboard')
+            dashboardData = mockData;
+            renderStats();
+            renderContent();
+        }
+
+        // 渲染统计卡片
+        function renderStats() {
+            const stats = dashboardData.stats;
+            const container = document.getElementById('stats-container');
+            
+            container.innerHTML = `
+                <div class="card rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-400 text-sm">总任务</div>
+                            <div class="text-2xl font-bold text-white">${stats.total_tasks}</div>
+                        </div>
+                        <i class="fas fa-tasks text-3xl text-blue-500/50"></i>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-400 text-sm">运行中</div>
+                            <div class="text-2xl font-bold text-yellow-400">${stats.running_tasks}</div>
+                        </div>
+                        <i class="fas fa-spinner text-3xl text-yellow-500/50"></i>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-400 text-sm">已完成</div>
+                            <div class="text-2xl font-bold text-green-400">${stats.completed_tasks}</div>
+                        </div>
+                        <i class="fas fa-check-circle text-3xl text-green-500/50"></i>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-slate-400 text-sm">Agent 在线</div>
+                            <div class="text-2xl font-bold text-blue-400">${stats.total_agents}</div>
+                        </div>
+                        <i class="fas fa-robot text-3xl text-blue-500/50"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 切换标签
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // 更新标签样式
+            document.querySelectorAll('[id^="tab-"]').forEach(el => {
+                el.classList.remove('border-blue-500', 'text-blue-400');
+                el.classList.add('border-transparent', 'text-slate-400');
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('border-transparent', 'text-slate-400');
+            document.getElementById(`tab-${tab}`).classList.add('border-blue-500', 'text-blue-400');
+            
+            renderContent();
+        }
+
+        // 渲染内容
+        function renderContent() {
+            const container = document.getElementById('content-area');
+            
+            switch(currentTab) {
+                case 'overview':
+                    container.innerHTML = renderOverview();
+                    break;
+                case 'tasks':
+                    container.innerHTML = renderTasks();
+                    break;
+                case 'agents':
+                    container.innerHTML = renderAgents();
+                    break;
+                case 'messages':
+                    container.innerHTML = renderMessages();
+                    break;
+                case 'logs':
+                    container.innerHTML = renderLogs();
+                    break;
+            }
+        }
+
+        // 总览页面
+        function renderOverview() {
+            const recentTasks = dashboardData.recent_tasks.slice(0, 3);
+            
+            return `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 最近任务 -->
+                    <div class="card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-white"><i class="fas fa-tasks mr-2 text-blue-500"></i>最近任务</h3>
+                        <div class="space-y-3">
+                            ${recentTasks.map(task => `
+                                <div class="p-4 bg-slate-800/50 rounded-lg cursor-pointer card-hover">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-white">${task.name}</span>
+                                        ${getStatusBadge(task.status)}
+                                    </div>
+                                    <p class="text-sm text-slate-400 mb-2">${task.description}</p>
+                                    <div class="flex items-center gap-4 text-xs text-slate-500">
+                                        <span><i class="fas fa-robot mr-1"></i>${task.agent_type === 'main' ? 'MainAgent' : 'SubAgent'}</span>
+                                        <span><i class="fas fa-clock mr-1"></i>${task.created_at.split('T')[1].substring(0, 5)}</span>
+                                    </div>
+                                    ${task.status === 'running' ? `
+                                        <div class="mt-3">
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span class="text-slate-400">进度</span>
+                                                <span class="text-blue-400">${task.progress}%</span>
+                                            </div>
+                                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-blue-500 rounded-full transition-all" style="width: ${task.progress}%"></div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Agent 拓扑图 -->
+                    <div class="card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-white"><i class="fas fa-network-wired mr-2 text-purple-500"></i>Agent 协作拓扑</h3>
+                        <div class="relative h-64 bg-slate-800/30 rounded-lg p-4">
+                            <!-- MainAgent -->
+                            <div class="absolute top-4 left-1/2 transform -translate-x-1/2">
+                                <div class="agent-node w-16 h-16 bg-blue-500/20 border-2 border-blue-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-2xl text-blue-400"></i>
+                                </div>
+                                <div class="text-center mt-2 text-sm text-white">MainAgent</div>
+                            </div>
+                            
+                            <!-- SubAgents -->
+                            <div class="absolute bottom-4 left-4">
+                                <div class="agent-node w-12 h-12 bg-green-500/20 border-2 border-green-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-cog text-lg text-green-400"></i>
+                                </div>
+                                <div class="text-center mt-1 text-xs text-slate-300">SubAgent-1</div>
+                                <div class="text-center text-xs text-yellow-400">运行中</div>
+                            </div>
+                            
+                            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                                <div class="agent-node w-12 h-12 bg-slate-500/20 border-2 border-slate-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-cog text-lg text-slate-400"></i>
+                                </div>
+                                <div class="text-center mt-1 text-xs text-slate-300">SubAgent-2</div>
+                                <div class="text-center text-xs text-slate-500">空闲</div>
+                            </div>
+                            
+                            <div class="absolute bottom-4 right-4">
+                                <div class="agent-node w-12 h-12 bg-slate-500/20 border-2 border-slate-500 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-cog text-lg text-slate-400"></i>
+                                </div>
+                                <div class="text-center mt-1 text-xs text-slate-300">SubAgent-3</div>
+                                <div class="text-center text-xs text-slate-500">空闲</div>
+                            </div>
+                            
+                            <!-- 连接线 -->
+                            <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                                <line x1="50%" y1="20%" x2="20%" y2="80%" stroke="rgba(59,130,246,0.3)" stroke-width="2" stroke-dasharray="5,5"></line>
+                                <line x1="50%" y1="20%" x2="50%" y2="80%" stroke="rgba(71,85,105,0.3)" stroke-width="2"></line>
+                                <line x1="50%" y1="20%" x2="80%" y2="80%" stroke="rgba(71,85,105,0.3)" stroke-width="2"></line>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 实时消息流 -->
+                <div class="card rounded-xl p-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4 text-white"><i class="fas fa-comments mr-2 text-green-500"></i>实时协作消息</h3>
+                    <div class="space-y-3 max-h-64 overflow-y-auto scrollbar-hide">
+                        ${dashboardData.messages.slice(-5).map(msg => `
+                            <div class="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg">
+                                <div class="w-8 h-8 rounded-full ${msg.from_agent === 'MainAgent' ? 'bg-blue-500/20' : 'bg-green-500/20'} flex items-center justify-center flex-shrink-0">
+                                    <i class="fas ${msg.from_agent === 'MainAgent' ? 'fa-brain text-blue-400' : 'fa-cog text-green-400'} text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-medium text-sm ${msg.from_agent === 'MainAgent' ? 'text-blue-400' : 'text-green-400'}">${msg.from_agent}</span>
+                                        <span class="text-slate-500 text-xs">→</span>
+                                        <span class="text-slate-400 text-xs">${msg.to_agent}</span>
+                                        <span class="text-slate-600 text-xs ml-auto">${msg.timestamp}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-300">${msg.content}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 任务列表页面
+        function renderTasks() {
+            return `
+                <div class="card rounded-xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-800/50">
+                            <tr>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">任务名称</th>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">类型</th>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">状态</th>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">进度</th>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">创建时间</th>
+                                <th class="px-4 py-3 text-sm font-medium text-slate-400">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            ${dashboardData.recent_tasks.map(task => `
+                                <tr class="hover:bg-slate-800/30 transition-colors">
+                                    <td class="px-4 py-3">
+                                        <div class="font-medium text-white">${task.name}</div>
+                                        <div class="text-xs text-slate-500">${task.description}</div>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="text-xs px-2 py-1 rounded ${task.agent_type === 'main' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}">${task.agent_type === 'main' ? '主任务' : '子任务'}</span>
+                                    </td>
+                                    <td class="px-4 py-3">${getStatusBadge(task.status)}</td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                                <div class="h-full ${task.status === 'completed' ? 'bg-green-500' : 'bg-blue-500'} rounded-full" style="width: ${task.progress}%"></div>
+                                            </div>
+                                            <span class="text-xs text-slate-400">${task.progress}%</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-slate-400">${task.created_at.split('T')[1].substring(0, 5)}</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-blue-400 hover:text-blue-300 text-sm"><i class="fas fa-eye"></i> 详情</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Agent 状态页面
+        function renderAgents() {
+            return `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${dashboardData.agents.map(agent => `
+                        <div class="card rounded-xl p-6 card-hover">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full ${agent.agent_type === 'main' ? 'bg-blue-500/20 border-2 border-blue-500' : 'bg-green-500/20 border-2 border-green-500'} flex items-center justify-center">
+                                        <i class="fas ${agent.agent_type === 'main' ? 'fa-brain text-xl text-blue-400' : 'fa-cog text-xl text-green-400'}"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-white">${agent.name}</div>
+                                        <div class="text-xs text-slate-400">${agent.agent_type === 'main' ? '主 Agent' : '子 Agent'}</div>
+                                    </div>
+                                </div>
+                                ${getAgentStatusBadge(agent.status)}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="text-xs text-slate-400 mb-2">能力</div>
+                                <div class="flex flex-wrap gap-2">
+                                    ${agent.capabilities.map(cap => `
+                                        <span class="text-xs px-2 py-1 bg-slate-700/50 rounded text-slate-300">${cap}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            ${agent.current_task ? `
+                                <div class="p-3 bg-slate-800/50 rounded-lg">
+                                    <div class="text-xs text-slate-400 mb-1">当前任务</div>
+                                    <div class="text-sm text-white">${agent.current_task}</div>
+                                </div>
+                            ` : `
+                                <div class="p-3 bg-slate-800/30 rounded-lg text-center">
+                                    <span class="text-sm text-slate-500">暂无任务</span>
+                                </div>
+                            `}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 消息页面
+        function renderMessages() {
+            return `
+                <div class="card rounded-xl p-6">
+                    <div class="space-y-4">
+                        ${dashboardData.messages.map(msg => `
+                            <div class="flex items-start gap-4 p-4 bg-slate-800/30 rounded-lg message-bubble">
+                                <div class="w-10 h-10 rounded-full ${msg.from_agent === 'MainAgent' ? 'bg-blue-500/20' : 'bg-green-500/20'} flex items-center justify-center flex-shrink-0">
+                                    <i class="fas ${msg.from_agent === 'MainAgent' ? 'fa-brain text-blue-400' : 'fa-cog text-green-400'}"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium ${msg.from_agent === 'MainAgent' ? 'text-blue-400' : 'text-green-400'}">${msg.from_agent}</span>
+                                        <span class="text-slate-500">→</span>
+                                        <span class="text-slate-400">${msg.to_agent}</span>
+                                        <span class="text-xs px-2 py-0.5 rounded ${getMessageTypeBadge(msg.msg_type)}">${msg.msg_type}</span>
+                                        <span class="text-slate-600 text-sm ml-auto">${msg.timestamp}</span>
+                                    </div>
+                                    <p class="text-slate-300">${msg.content}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 日志页面
+        function renderLogs() {
+            return `
+                <div class="card rounded-xl overflow-hidden">
+                    <div class="bg-slate-800/50 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
+                        <i class="fas fa-terminal text-slate-400"></i>
+                        <span class="text-sm font-medium text-slate-300">执行日志</span>
+                    </div>
+                    <div class="divide-y divide-slate-700/30 max-h-96 overflow-y-auto">
+                        ${dashboardData.logs.map(log => `
+                            <div class="px-4 py-3 hover:bg-slate-800/30 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs text-slate-500 font-mono">${log.timestamp}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded ${getLogLevelBadge(log.level)}">${log.level.toUpperCase()}</span>
+                                    <span class="text-xs text-blue-400">[${log.agent_id}]</span>
+                                    <span class="text-sm text-slate-300">${log.message}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 辅助函数
+        function getStatusBadge(status) {
+            const badges = {
+                'pending': '<span class="text-xs px-2 py-1 rounded bg-slate-500/20 text-slate-400">⏳ 待执行</span>',
+                'running': '<span class="text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-400 status-running">▶ 运行中</span>',
+                'completed': '<span class="text-xs px-2 py-1 rounded bg-green-500/20 text-green-400">✓ 已完成</span>',
+                'failed': '<span class="text-xs px-2 py-1 rounded bg-red-500/20 text-red-400">✗ 失败</span>'
+            };
+            return badges[status] || status;
+        }
+
+        function getAgentStatusBadge(status) {
+            const badges = {
+                'idle': '<span class="text-xs px-2 py-1 rounded bg-slate-500/20 text-slate-400">空闲</span>',
+                'busy': '<span class="text-xs px-2 py-1 rounded bg-yellow-500/20 text-yellow-400">运行中</span>',
+                'offline': '<span class="text-xs px-2 py-1 rounded bg-red-500/20 text-red-400">离线</span>'
+            };
+            return badges[status] || status;
+        }
+
+        function getMessageTypeBadge(type) {
+            const badges = {
+                'assign': 'bg-purple-500/20 text-purple-400',
+                'ack': 'bg-blue-500/20 text-blue-400',
+                'discuss': 'bg-yellow-500/20 text-yellow-400',
+                'result': 'bg-green-500/20 text-green-400'
+            };
+            return badges[type] || 'bg-slate-500/20 text-slate-400';
+        }
+
+        function getLogLevelBadge(level) {
+            const badges = {
+                'info': 'bg-blue-500/20 text-blue-400',
+                'warn': 'bg-yellow-500/20 text-yellow-400',
+                'error': 'bg-red-500/20 text-red-400'
+            };
+            return badges[level] || 'bg-slate-500/20 text-slate-400';
+        }
+
+        // 刷新数据
+        function refreshData() {
+            loadData();
+        }
+
+        // 自动刷新
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                loadData();
+            }, 5000); // 每5秒刷新
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
