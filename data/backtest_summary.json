@@ -1,0 +1,21 @@
+{
+  "version": "v6.5",
+  "description": "收紧形态标准:杯深15-25%,柄深≤20%,杯形时间≥20天,柄部缩量",
+  "timestamp": "2026-03-20T10:00:00Z",
+  "results": {
+    "total_signals": 0,
+    "win_rate": 0,
+    "avg_return": 0,
+    "sharpe_ratio": 0,
+    "max_gain": 0,
+    "max_loss": 0,
+    "avg_hold_days": 0
+  },
+  "comparison": {
+    "v63": {
+      "win_rate": 53,
+      "avg_return": 1.86,
+      "sharpe_ratio": 0.51
+    }
+  }
+}
