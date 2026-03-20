@@ -42,6 +42,9 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
+                    <button onclick="showPage('strategy-v10')" class="px-3 py-1.5 bg-green-600/80 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-rocket mr-1"></i>v1.0策略
+                    </button>
                     <div class="text-slate-400 text-sm" id="current-time">--:--</div>
                     <button onclick="refreshAll()" class="p-2 hover:bg-slate-700 rounded-lg transition-colors">
                         <i class="fas fa-sync-alt text-slate-400"></i>
@@ -696,6 +699,140 @@
                             <li>关注新能源板块持续性</li>
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- v1.0 策略回测报告页 -->
+        <div id="page-strategy-v10" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">杯柄突破预警策略 v1.0</h2>
+                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-sm">最新</span>
+            </div>
+
+            <!-- 回测汇总 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">扫描股票</div>
+                    <div class="text-3xl font-bold text-white">5,490</div>
+                    <div class="text-xs text-slate-500">全市场</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">发现信号</div>
+                    <div class="text-3xl font-bold text-yellow-400">0</div>
+                    <div class="text-xs text-slate-500">当前未出现</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">预警信号</div>
+                    <div class="text-3xl font-bold text-blue-400">0</div>
+                    <div class="text-xs text-slate-500">接近突破</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">确认信号</div>
+                    <div class="text-3xl font-bold text-green-400">0</div>
+                    <div class="text-xs text-slate-500">突破确认</div>
+                </div>
+            </div>
+
+            <!-- 策略参数 -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <h3 class="font-semibold text-white mb-4"><i class="fas fa-cog mr-2 text-blue-400"></i>策略参数</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-sm font-medium text-slate-300 mb-3">形态条件</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">杯深</span>
+                                <span class="text-white">14% - 26%</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">柄深</span>
+                                <span class="text-white">≤ 22%（相对杯身）</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">杯形时间</span>
+                                <span class="text-white">≥ 15天</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">柄部时间</span>
+                                <span class="text-white">≥ 5天</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-medium text-slate-300 mb-3">成交量条件（v1.0新增）</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">杯柄底部</span>
+                                <span class="text-white">地量（<杯身30%）</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">接近突破点</span>
+                                <span class="text-white">温和放量</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">相对底部放量</span>
+                                <span class="text-white">> 20%</span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-slate-800/50 rounded">
+                                <span class="text-slate-400">相对杯身</span>
+                                <span class="text-white">< 80%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信号说明 -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <h3 class="font-semibold text-white mb-4"><i class="fas fa-signal mr-2 text-green-400"></i>信号类型</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                            <span class="font-medium text-white">预警信号</span>
+                        </div>
+                        <p class="text-sm text-slate-400">收盘价距杯口 ≤3%，未突破。建议加入观察列表，等待突破确认。</p>
+                    </div>
+                    
+                    <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                            <span class="font-medium text-white">确认信号</span>
+                        </div>
+                        <p class="text-sm text-slate-400">收盘价突破杯口（≥99.5%）。建议买入。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 回测结果 -->
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-semibold text-white mb-4"><i class="fas fa-chart-bar mr-2 text-purple-400"></i>回测结果</h3>
+                
+                <div class="p-4 bg-slate-800/50 rounded-lg mb-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fas fa-info-circle text-blue-400"></i>
+                        <span class="font-medium text-white">回测说明</span>
+                    </div>
+                    <p class="text-sm text-slate-400">v1.0策略条件较严格（新增成交量过滤），当前市场未出现符合条件的信号。建议：</p>
+                    <ul class="list-disc list-inside text-sm text-slate-400 mt-2 space-y-1">
+                        <li>放宽成交量条件（如：底部<40%，放量>15%）</li>
+                        <li>或等待市场出现符合条件的形态</li>
+                        <li>持续监控，信号出现时立即推送</li>
+                    </ul>
+                </div>
+
+                <div class="text-center py-8">
+                    <div class="text-6xl mb-4">📊</div>
+                    <h4 class="text-xl font-bold text-white mb-2">暂无信号</h4>
+                    <p class="text-slate-400">当前市场未出现符合条件的杯柄突破预警信号</p>
+                    <p class="text-sm text-slate-500 mt-2">最后更新：2026-03-21 00:30</p>
                 </div>
             </div>
         </div>

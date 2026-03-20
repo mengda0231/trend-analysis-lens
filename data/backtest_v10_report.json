@@ -1,0 +1,21 @@
+{
+  "version": "v1.0",
+  "date": "2026-03-21",
+  "total_stocks": 5490,
+  "signals_found": 0,
+  "params": {
+    "cup_depth": "14-26%",
+    "handle_depth": "≤22%",
+    "cup_days": "≥15",
+    "handle_days": "≥5",
+    "distance_to_rim": "≤3%",
+    "volume_handle": "<30% of cup body",
+    "volume_approach": ">20% and <80% of cup body"
+  },
+  "signals": [],
+  "summary": {
+    "warning": 0,
+    "confirm": 0
+  },
+  "note": "v1.0策略条件较严格，当前市场未出现符合条件的信号。建议放宽参数或等待市场机会。"
+}
