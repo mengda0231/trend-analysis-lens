@@ -14,19 +14,16 @@
         .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e1b4b 100%); }
         .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(71, 85, 105, 0.3); }
-        .glass-card-hover:hover { background: rgba(30, 41, 59, 0.6); border-color: rgba(96, 165, 250, 0.5); transform: translateY(-2px); cursor: pointer; }
+        .glass-card-hover:hover { background: rgba(30, 41, 59, 0.6); border-color: rgba(96, 165, 250, 0.5); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .status-running { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
+        .status-idle { background: #64748b; }
+        .status-busy { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .progress-bar { background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 9999px; height: 100%; transition: width 0.5s ease; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.3); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.5); border-radius: 3px; }
-        .report-card { transition: all 0.3s ease; }
-        .report-card:hover { transform: translateY(-4px); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-        .nav-item { transition: all 0.2s; }
-        .nav-item:hover { background: rgba(96, 165, 250, 0.1); }
-        .nav-item.active { background: rgba(96, 165, 250, 0.2); border-left: 3px solid #3b82f6; }
     </style>
 </head>
 <body class="min-h-screen gradient-bg">
@@ -44,83 +41,69 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-3 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="status-dot status-running"></span>
-                            <span class="text-slate-300">系统正常</span>
-                        </div>
-                        <div class="h-4 w-px bg-slate-700"></div>
-                        <div class="text-slate-400" id="current-time">--:--</div>
-                    </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-slate-400 text-sm" id="current-time">--:--</div>
+                    <button onclick="refreshAll()" class="p-2 hover:bg-slate-700 rounded-lg transition-colors">
+                        <i class="fas fa-sync-alt text-slate-400"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- 主内容区 -->
-    <div id="main-container">
-        <!-- 仪表盘页面 -->
-        <div id="page-dashboard" class="max-w-7xl mx-auto px-4 py-6">
-            
-            <!-- 可点击的统计卡片 -->
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-                <div class="glass-card glass-card-hover rounded-xl p-4 col-span-2" onclick="showPage('backtest')">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-slate-400">最新回测</span>
-                        <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">v6.5.1</span>
-                    </div>
+    <!-- 页面容器 -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- 仪表盘首页 -->
+        <div id="page-dashboard">
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('backtest')">
+                    <div class="text-xs text-slate-400 mb-1">最新回测</div>
                     <div class="text-2xl font-bold text-white">598</div>
-                    <div class="text-xs text-slate-500">信号数量 <i class="fas fa-arrow-right ml-1"></i></div>
+                    <div class="text-xs text-slate-500">信号 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
-                
-                <div class="glass-card glass-card-hover rounded-xl p-4" onclick="showPage('agents')">
+
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('agents')">
                     <div class="text-xs text-slate-400 mb-1">Agent 总数</div>
-                    <div class="text-xl font-bold text-blue-400">4</div>
+                    <div class="text-2xl font-bold text-blue-400">4</div>
                     <div class="text-xs text-slate-500">在线 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
-                
-                <div class="glass-card glass-card-hover rounded-xl p-4" onclick="showPage('tasks')">
+
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('tasks')">
                     <div class="text-xs text-slate-400 mb-1">运行中任务</div>
-                    <div class="text-xl font-bold text-yellow-400">2</div>
+                    <div class="text-2xl font-bold text-yellow-400">2</div>
                     <div class="text-xs text-slate-500">活跃 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
-                
-                <div class="glass-card glass-card-hover rounded-xl p-4" onclick="showPage('tasks')">
+
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('tasks')">
                     <div class="text-xs text-slate-400 mb-1">已完成</div>
-                    <div class="text-xl font-bold text-green-400">12</div>
+                    <div class="text-2xl font-bold text-green-400">12</div>
                     <div class="text-xs text-slate-500">今日 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
-                
-                <div class="glass-card glass-card-hover rounded-xl p-4" onclick="showPage('messages')">
+
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('messages')">
                     <div class="text-xs text-slate-400 mb-1">消息数</div>
-                    <div class="text-xl font-bold text-purple-400">28</div>
+                    <div class="text-2xl font-bold text-purple-400">28</div>
                     <div class="text-xs text-slate-500">协作 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
-                
-                <div class="glass-card glass-card-hover rounded-xl p-4 col-span-2" onclick="showPage('reports')">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-slate-400">报告中心</span>
-                        <i class="fas fa-file-alt text-blue-400"></i>
-                    </div>
+
+                <div class="glass-card rounded-xl p-4 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('reports')">
+                    <div class="text-xs text-slate-400 mb-1">报告中心</div>
                     <div class="text-2xl font-bold text-white">5</div>
-                    <div class="text-xs text-slate-500">份报告待查看 <i class="fas fa-arrow-right ml-1"></i></div>
+                    <div class="text-xs text-slate-500">份报告 <i class="fas fa-arrow-right ml-1"></i></div>
                 </div>
             </div>
 
             <!-- 快速访问报告 -->
             <div class="mb-6">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-file-alt text-blue-400"></i>
-                        <h3 class="font-semibold text-white">最新报告</h3>
-                    </div>
+                    <h3 class="font-semibold text-white"><i class="fas fa-file-alt mr-2 text-blue-400"></i>最新报告</h3>
                     <button onclick="showPage('reports')" class="text-sm text-blue-400 hover:text-blue-300">查看全部 <i class="fas fa-arrow-right"></i></button>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- 杯柄筛查报告 -->
-                    <div class="glass-card report-card rounded-xl p-5 cursor-pointer" onclick="showCupHandleReport()">
+                    <div class="glass-card rounded-xl p-5 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('cuphandle')">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
                                 <i class="fas fa-filter text-purple-400 text-xl"></i>
@@ -128,16 +111,14 @@
                             <span class="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">最新</span>
                         </div>
                         <h4 class="font-semibold text-white mb-2">杯柄形态筛选报告</h4>
-                        <p class="text-sm text-slate-400 mb-4">发现 15 只符合条件的股票，其中 A级 3 只，B级 12 只</p>
-                        
+                        <p class="text-sm text-slate-400 mb-4">发现 15 只符合条件的股票</p>
                         <div class="flex items-center justify-between text-xs text-slate-500">
-                            <span><i class="far fa-clock mr-1"></i>18:30</span>
+                            <span>18:30</span>
                             <span class="text-purple-400">点击查看 <i class="fas fa-chevron-right"></i></span>
                         </div>
                     </div>
 
-                    <!-- 夜报 -->
-                    <div class="glass-card report-card rounded-xl p-5 cursor-pointer" onclick="showEveningReport()">
+                    <div class="glass-card rounded-xl p-5 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('evening-report')">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                                 <i class="fas fa-moon text-blue-400 text-xl"></i>
@@ -145,16 +126,14 @@
                             <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">夜报</span>
                         </div>
                         <h4 class="font-semibold text-white mb-2">深度财经夜报</h4>
-                        <p class="text-sm text-slate-400 mb-4">汇总今日市场动态、机构动向、明日关注事项</p>
-                        
+                        <p class="text-sm text-slate-400 mb-4">今日市场动态与明日关注</p>
                         <div class="flex items-center justify-between text-xs text-slate-500">
-                            <span><i class="far fa-clock mr-1"></i>20:02</span>
+                            <span>20:02</span>
                             <span class="text-blue-400">点击查看 <i class="fas fa-chevron-right"></i></span>
                         </div>
                     </div>
 
-                    <!-- 日报 -->
-                    <div class="glass-card report-card rounded-xl p-5 cursor-pointer" onclick="showMorningReport()">
+                    <div class="glass-card rounded-xl p-5 cursor-pointer hover:bg-slate-800/60 transition-all" onclick="showPage('morning-report')">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
                                 <i class="fas fa-sun text-yellow-400 text-xl"></i>
@@ -162,23 +141,19 @@
                             <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded">早报</span>
                         </div>
                         <h4 class="font-semibold text-white mb-2">财经早报</h4>
-                        <p class="text-sm text-slate-400 mb-4">隔夜市场回顾、早盘策略、重点关注板块</p>
-                        
+                        <p class="text-sm text-slate-400 mb-4">隔夜市场与早盘策略</p>
                         <div class="flex items-center justify-between text-xs text-slate-500">
-                            <span><i class="far fa-clock mr-1"></i>09:00</span>
+                            <span>09:00</span>
                             <span class="text-yellow-400">点击查看 <i class="fas fa-chevron-right"></i></span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 回测趋势图 -->
+            <!-- 回测趋势 -->
             <div class="glass-card rounded-xl p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-chart-line text-blue-400"></i>
-                        <h3 class="font-semibold text-white">回测版本趋势</h3>
-                    </div>
+                    <h3 class="font-semibold text-white"><i class="fas fa-chart-line mr-2 text-blue-400"></i>回测版本趋势</h3>
                 </div>
                 <div class="h-64">
                     <canvas id="backtestChart"></canvas>
@@ -186,161 +161,449 @@
             </div>
         </div>
 
-        <!-- 杯柄筛查报告页面 -->
-        <div id="page-cuphandle" class="hidden max-w-7xl mx-auto px-4 py-6">
+        <!-- Agent 列表页 -->
+        <div id="page-agents" class="hidden">
             <div class="flex items-center gap-4 mb-6">
-                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg transition-colors">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">Agent 列表</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <i class="fas fa-brain text-blue-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">MainAgent</h3>
+                            <span class="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">运行中</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="text-sm text-slate-400"><strong class="text-white">能力:</strong> 任务规划、协调管理、结果汇总</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">当前任务:</strong> v6.6回测优化</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">今日完成任务:</strong> 12 个</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <i class="fas fa-cog text-green-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">SubAgent-1</h3>
+                            <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded">忙碌</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="text-sm text-slate-400"><strong class="text-white">能力:</strong> 参数优化、回测执行</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">当前任务:</strong> 参数优化</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">进度:</strong> 60%</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-slate-600/20 flex items-center justify-center">
+                            <i class="fas fa-cog text-slate-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">SubAgent-2</h3>
+                            <span class="text-xs px-2 py-1 bg-slate-500/20 text-slate-400 rounded">空闲</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="text-sm text-slate-400"><strong class="text-white">能力:</strong> 数据分析、结果验证</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">当前任务:</strong> 无</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">今日完成任务:</strong> 5 个</div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-slate-600/20 flex items-center justify-center">
+                            <i class="fas fa-cog text-slate-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">SubAgent-3</h3>
+                            <span class="text-xs px-2 py-1 bg-slate-500/20 text-slate-400 rounded">空闲</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="text-sm text-slate-400"><strong class="text-white">能力:</strong> 报告生成</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">当前任务:</strong> 无</div>
+                        <div class="text-sm text-slate-400"><strong class="text-white">今日完成任务:</strong> 3 个</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务列表页 -->
+        <div id="page-tasks" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">任务列表</h2>
+            </div>
+
+            <!-- 运行中 -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <h3 class="font-semibold text-white mb-4"><span class="w-3 h-3 bg-blue-500 rounded-full inline-block mr-2"></span>运行中</h3>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-800/50 rounded-lg border border-blue-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <div class="font-medium text-white">v6.6回测优化</div>
+                                <div class="text-sm text-slate-400">MainAgent | 开始于 23:20</div>
+                            </div>
+                            <span class="text-blue-400 font-bold">45%</span>
+                        </div>
+                        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg border border-yellow-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <div class="font-medium text-white">参数优化</div>
+                                <div class="text-sm text-slate-400">SubAgent-1 | 开始于 23:20</div>
+                            </div>
+                            <span class="text-yellow-400 font-bold">60%</span>
+                        </div>
+                        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-yellow-500 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 已完成 -->
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-semibold text-white mb-4"><span class="w-3 h-3 bg-green-500 rounded-full inline-block mr-2"></span>今日已完成</h3>
+                
+                <div class="space-y-3">
+                    <div class="p-4 bg-slate-800/30 rounded-lg flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-white">每日数据更新</div>
+                            <div class="text-sm text-slate-400">更新 5490 只股票数据 | 18:05</div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-400"></i>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/30 rounded-lg flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-white">杯柄形态筛选</div>
+                            <div class="text-sm text-slate-400">发现 15 只股票 | 18:30</div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-400"></i>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/30 rounded-lg flex items-center justify-between">
+                        <div>
+                            <div class="font-medium text-white">深度夜报生成</div>
+                            <div class="text-sm text-slate-400">生成并推送夜报 | 20:02</div>
+                        </div>
+                        <i class="fas fa-check-circle text-green-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 消息中心页 -->
+        <div id="page-messages" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">消息中心</h2>
+            </div>
+
+            <div class="glass-card rounded-xl p-6">
+                <div class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                    <div class="p-4 bg-slate-800/50 rounded-lg border-l-4 border-purple-500">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-medium text-blue-400">MainAgent</span>
+                            <span class="text-slate-500">→</span>
+                            <span class="text-slate-400">SubAgent-1</span>
+                            <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded ml-auto">分配</span>
+                        </div>
+                        <p class="text-slate-300">开始参数优化任务，测试杯深15-25%范围</p>
+                        <div class="text-xs text-slate-500 mt-2">23:20:05</div>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg border-l-4 border-blue-500">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-medium text-green-400">SubAgent-1</span>
+                            <span class="text-slate-500">→</span>
+                            <span class="text-slate-400">MainAgent</span>
+                            <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded ml-auto">确认</span>
+                        </div>
+                        <p class="text-slate-300">收到，开始执行参数优化</p>
+                        <div class="text-xs text-slate-500 mt-2">23:20:08</div>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg border-l-4 border-yellow-500">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-medium text-green-400">SubAgent-1</span>
+                            <span class="text-slate-500">→</span>
+                            <span class="text-slate-400">SubAgent-2</span>
+                            <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded ml-auto">讨论</span>
+                        </div>
+                        <p class="text-slate-300">参数优化完成，最优杯深18-24%，胜率56.2%</p>
+                        <div class="text-xs text-slate-500 mt-2">23:25:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 报告中心页 -->
+        <div id="page-reports" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">报告中心</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="glass-card rounded-xl p-6 cursor-pointer hover:bg-slate-800/60" onclick="showPage('cuphandle')">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                            <i class="fas fa-filter text-purple-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">杯柄形态筛选报告</h3>
+                            <span class="text-xs text-slate-400">2026-03-20 18:30</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-4">发现 15 只符合条件的股票，A级 3 只，B级 12 只</p>
+                    <span class="text-purple-400 text-sm">点击查看 <i class="fas fa-arrow-right"></i></span>
+                </div>
+
+                <div class="glass-card rounded-xl p-6 cursor-pointer hover:bg-slate-800/60" onclick="showPage('evening-report')">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <i class="fas fa-moon text-blue-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">深度财经夜报</h3>
+                            <span class="text-xs text-slate-400">2026-03-20 20:02</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-4">今日市场动态、机构动向、明日关注事项</p>
+                    <span class="text-blue-400 text-sm">点击查看 <i class="fas fa-arrow-right"></i></span>
+                </div>
+
+                <div class="glass-card rounded-xl p-6 cursor-pointer hover:bg-slate-800/60" onclick="showPage('morning-report')">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            <i class="fas fa-sun text-yellow-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">财经早报</h3>
+                            <span class="text-xs text-slate-400">2026-03-21 09:00</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-4">隔夜市场回顾、早盘策略、重点关注板块</p>
+                    <span class="text-yellow-400 text-sm">点击查看 <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 杯柄筛查详情页 -->
+        <div id="page-cuphandle" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
                     <i class="fas fa-arrow-left text-slate-400"></i>
                 </button>
                 <h2 class="text-2xl font-bold text-white">杯柄形态筛选报告</h2>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- 汇总统计 -->
-                <div class="lg:col-span-1">
-                    <div class="glass-card rounded-xl p-6 mb-6">
-                        <h3 class="font-semibold text-white mb-4">筛选汇总</h3>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span class="text-slate-400">筛选股票总数</span>
-                                <span class="text-white font-bold">5490</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span class="text-slate-400">符合条件</span>
-                                <span class="text-green-400 font-bold">15 只</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span class="text-slate-400">A级信号</span>
-                                <span class="text-purple-400 font-bold">3 只</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
-                                <span class="text-slate-400">B级信号</span>
-                                <span class="text-blue-400 font-bold">12 只</span>
-                            </div>
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="font-semibold text-white mb-4">筛选汇总</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                            <span class="text-slate-400">筛选股票总数</span>
+                            <span class="text-white font-bold">5490</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                            <span class="text-slate-400">符合条件</span>
+                            <span class="text-green-400 font-bold">15 只</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                            <span class="text-slate-400">A级信号</span>
+                            <span class="text-purple-400 font-bold">3 只</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-800/50 rounded-lg">
+                            <span class="text-slate-400">B级信号</span>
+                            <span class="text-blue-400 font-bold">12 只</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 详细列表 -->
-                <div class="lg:col-span-2">
-                    <div class="glass-card rounded-xl p-6">
-                        <h3 class="font-semibold text-white mb-4">筛选结果详情</h3>
-                        
-                        <!-- A级股票 -->
-                        <div class="mb-6">
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="w-3 h-3 bg-purple-500 rounded-full"></span>
-                                <span class="font-medium text-white">A级信号（强烈推荐）</span>
+                <div class="lg:col-span-2 glass-card rounded-xl p-6">
+                    <h3 class="font-semibold text-white mb-4">A级信号（强烈推荐）</h3>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg font-bold text-white">贵州茅台</span>
+                                    <span class="text-sm text-slate-400">600519.SH</span>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded">A级</span>
                             </div>
-                            
-                            <div class="space-y-3">
-                                <div class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-lg font-bold text-white">贵州茅台</span>
-                                            <span class="text-sm text-slate-400">600519.SH</span>
-                                        </div>
-                                        <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded">A级</span>
-                                    </div>
-                                    <div class="grid grid-cols-4 gap-4 text-sm">
-                                        <div>
-                                            <div class="text-slate-400">当前价</div>
-                                            <div class="text-white">1688.00</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">杯深</div>
-                                            <div class="text-green-400">18.5%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">柄深</div>
-                                            <div class="text-green-400">8.2%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">杯口</div>
-                                            <div class="text-white">1750.00</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-lg font-bold text-white">宁德时代</span>
-                                            <span class="text-sm text-slate-400">300750.SZ</span>
-                                        </div>
-                                        <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded">A级</span>
-                                    </div>
-                                    <div class="grid grid-cols-4 gap-4 text-sm">
-                                        <div>
-                                            <div class="text-slate-400">当前价</div>
-                                            <div class="text-white">198.50</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">杯深</div>
-                                            <div class="text-green-400">22.3%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">柄深</div>
-                                            <div class="text-green-400">9.1%</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-slate-400">杯口</div>
-                                            <div class="text-white">210.00</div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="grid grid-cols-4 gap-4 text-sm">
+                                <div><div class="text-slate-400">当前价</div><div class="text-white">1688.00</div></div>
+                                <div><div class="text-slate-400">杯深</div><div class="text-green-400">18.5%</div></div>
+                                <div><div class="text-slate-400">柄深</div><div class="text-green-400">8.2%</div></div>
+                                <div><div class="text-slate-400">杯口</div><div class="text-white">1750.00</div></div>
                             </div>
                         </div>
 
-                        <!-- B级股票 -->
-                        <div>
-                            <div class="flex items-center gap-2 mb-3">
-                                <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
-                                <span class="font-medium text-white">B级信号（值得关注）</span>
+                        <div class="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg font-bold text-white">宁德时代</span>
+                                    <span class="text-sm text-slate-400">300750.SZ</span>
+                                </div>
+                                <span class="text-xs px-2 py-1 bg-purple-500/20 text-purple-400 rounded">A级</span>
                             </div>
-                            
-                            <div class="space-y-2">
-                                <div class="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
-                                    <div class="flex items-center gap-4">
-                                        <span class="font-medium text-white">中国平安</span>
-                                        <span class="text-sm text-slate-400">601318.SH</span>
-                                    </div>
-                                    <div class="flex items-center gap-6 text-sm">
-                                        <span class="text-slate-400">杯深: <span class="text-white">19.2%</span></span>
-                                        <span class="text-slate-400">柄深: <span class="text-white">11.5%</span></span>
-                                        <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">B级</span>
-                                    </div>
-                                </div>
+                            <div class="grid grid-cols-4 gap-4 text-sm">
+                                <div><div class="text-slate-400">当前价</div><div class="text-white">198.50</div></div>
+                                <div><div class="text-slate-400">杯深</div><div class="text-green-400">22.3%</div></div>
+                                <div><div class="text-slate-400">柄深</div><div class="text-green-400">9.1%</div></div>
+                                <div><div class="text-slate-400">杯口</div><div class="text-white">210.00</div></div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
-                                    <div class="flex items-center gap-4">
-                                        <span class="font-medium text-white">比亚迪</span>
-                                        <span class="text-sm text-slate-400">002594.SZ</span>
-                                    </div>
-                                    <div class="flex items-center gap-6 text-sm">
-                                        <span class="text-slate-400">杯深: <span class="text-white">21.8%</span></span>
-                                        <span class="text-slate-400">柄深: <span class="text-white">12.3%</span></span>
-                                        <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">B级</span>
-                                    </div>
-                                </div>
+                    <h3 class="font-semibold text-white mb-4">B级信号（值得关注）</h3>
+                    
+                    <div class="space-y-2">
+                        <div class="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="font-medium text-white">中国平安</span>
+                                <span class="text-sm text-slate-400">601318.SH</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <span class="text-slate-400">杯深: <span class="text-white">19.2%</span></span>
+                                <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">B级</span>
+                            </div>
+                        </div>
 
-                                <div class="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
-                                    <div class="flex items-center gap-4">
-                                        <span class="font-medium text-white">五粮液</span>
-                                        <span class="text-sm text-slate-400">000858.SZ</span>
-                                    </div>
-                                    <div class="flex items-center gap-6 text-sm">
-                                        <span class="text-slate-400">杯深: <span class="text-white">17.5%</span></span>
-                                        <span class="text-slate-400">柄深: <span class="text-white">10.8%</span></span>
-                                        <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">B级</span>
-                                    </div>
-                                </div>
+                        <div class="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="font-medium text-white">比亚迪</span>
+                                <span class="text-sm text-slate-400">002594.SZ</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <span class="text-slate-400">杯深: <span class="text-white">21.8%</span></span>
+                                <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded">B级</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 夜报详情页 -->
+        <div id="page-evening-report" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">深度财经夜报</h2>
+            </div>
+
+            <div class="glass-card rounded-xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">深度财经夜报</h1>
+                    <p class="text-slate-400">2026年3月20日 星期五</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">📊 今日市场概览</h3>
+                        <p class="text-slate-300">今日A股三大指数集体收涨，沪指涨0.5%，深成指涨0.8%，创业板指涨1.2%。成交量较昨日放大15%，北向资金净流入45亿元。</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">🔥 热点板块</h3>
+                        <ul class="list-disc list-inside text-slate-300 space-y-2">
+                            <li>新能源板块领涨，宁德时代涨5.2%</li>
+                            <li>白酒板块反弹，贵州茅台涨2.1%</li>
+                            <li>半导体板块活跃，中芯国际涨3.8%</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">📈 机构动向</h3>
+                        <p class="text-slate-300">今日机构资金主要流向新能源、消费电子板块。龙虎榜显示，机构净买入宁德时代2.5亿元，净卖出中国平安1.2亿元。</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">🎯 明日关注</h3>
+                        <ul class="list-disc list-inside text-slate-300 space-y-2">
+                            <li>美联储利率决议（凌晨2:00）</li>
+                            <li>国内LPR报价（9:15）</li>
+                            <li>关注新能源板块持续性</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 早报详情页 -->
+        <div id="page-morning-report" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">财经早报</h2>
+            </div>
+
+            <div class="glass-card rounded-xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">财经早报</h1>
+                    <p class="text-slate-400">2026年3月21日 星期六</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">🌍 隔夜市场</h3>
+                        <ul class="list-disc list-inside text-slate-300 space-y-2">
+                            <li>美股三大指数涨跌不一，道指涨0.3%，纳指跌0.2%</li>
+                            <li>国际油价上涨2%，布伦特原油报85美元/桶</li>
+                            <li>美元指数小幅下跌，报103.5</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">📰 重要新闻</h3>
+                        <ul class="list-disc list-inside text-slate-300 space-y-2">
+                            <li>央行：保持货币政策稳健，支持实体经济发展</li>
+                            <li>工信部：加快新能源汽车产业发展</li>
+                            <li>证监会：优化IPO审核流程，提高审核效率</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-lg">
+                        <h3 class="font-semibold text-white mb-3">🎯 早盘策略</h3>
+                        <p class="text-slate-300">今日建议关注新能源、半导体板块。操作上保持谨慎，控制仓位，关注成交量变化。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -356,24 +619,22 @@
         // 页面切换
         function showPage(page) {
             // 隐藏所有页面
-            document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('[id^="page-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
             // 显示指定页面
-            document.getElementById('page-' + page).classList.remove('hidden');
+            const target = document.getElementById('page-' + page);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
         }
 
-        // 显示杯柄报告
-        function showCupHandleReport() {
-            showPage('cuphandle');
-        }
-
-        // 显示夜报
-        function showEveningReport() {
-            alert('夜报功能开发中...');
-        }
-
-        // 显示早报
-        function showMorningReport() {
-            alert('早报功能开发中...');
+        // 刷新
+        function refreshAll() {
+            const icon = document.querySelector('.fa-sync-alt');
+            icon.classList.add('fa-spin');
+            setTimeout(() => icon.classList.remove('fa-spin'), 1000);
         }
 
         // 初始化图表
@@ -413,13 +674,6 @@
                     }
                 }
             });
-        }
-
-        // 刷新
-        function refreshAll() {
-            const icon = document.querySelector('.fa-sync-alt');
-            icon.classList.add('fa-spin');
-            setTimeout(() => icon.classList.remove('fa-spin'), 1000);
         }
 
         // 初始化
