@@ -43,10 +43,13 @@
                 
                 <div class="flex items-center gap-4">
                     <button onclick="showPage('strategy-v17')" class="px-3 py-1.5 bg-yellow-600/80 hover:bg-yellow-600 rounded-lg text-sm font-medium transition-colors">
-                        <i class="fas fa-crown mr-1"></i>v1.7报告
+                        <i class="fas fa-crown mr-1"></i>杯柄大师版
                     </button>
                     <button onclick="showPage('strategy-v11')" class="px-3 py-1.5 bg-purple-600/80 hover:bg-purple-600 rounded-lg text-sm font-medium transition-colors">
-                        <i class="fas fa-rocket mr-1"></i>v1.1策略
+                        <i class="fas fa-user-graduate mr-1"></i>专家经验版
+                    </button>
+                    <button onclick="showPage('strategy-v10')" class="px-3 py-1.5 bg-green-600/80 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fas fa-filter mr-1"></i>形态筛选版
                     </button>
                     <button onclick="showPage('strategy-v10')" class="px-3 py-1.5 bg-green-600/80 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors">
                         <i class="fas fa-history mr-1"></i>v1.0历史
@@ -715,8 +718,44 @@
                 <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
                     <i class="fas fa-arrow-left text-slate-400"></i>
                 </button>
-                <h2 class="text-2xl font-bold text-white">杯柄突破预警策略 v1.1</h2>
-                <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-sm">✅ 达标</span>
+                <h2 class="text-2xl font-bold text-white">专家经验版 (v1.1)</h2>
+                <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-sm">已进化</span>
+            </div>
+
+            <!-- 提示：已进化到杯柄大师版 -->
+            <div class="glass-card rounded-xl p-6 mb-6 border border-yellow-500/30">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-arrow-up text-yellow-400 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-white mb-2">该版本已进化到「杯柄大师版」</h3>
+                        <p class="text-slate-400 mb-4">专家经验版 (v1.1) 经过多轮自动迭代，已优化为杯柄大师版 (v1.7)。新版本增加了底部涨幅、回调幅度、震荡时间等专家经验条件。</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div class="p-3 bg-slate-800/50 rounded text-center">
+                                <div class="text-2xl font-bold text-white">195</div>
+                                <div class="text-xs text-slate-400">优化后信号</div>
+                            </div>
+                            <div class="p-3 bg-slate-800/50 rounded text-center">
+                                <div class="text-2xl font-bold text-green-400">40.5%</div>
+                                <div class="text-xs text-slate-400">胜率</div>
+                            </div>
+                            <div class="p-3 bg-slate-800/50 rounded text-center">
+                                <div class="text-2xl font-bold text-green-400">+1.27%</div>
+                                <div class="text-xs text-slate-400">平均收益</div>
+                            </div>
+                            <div class="p-3 bg-slate-800/50 rounded text-center">
+                                <div class="text-2xl font-bold text-yellow-400">+103%</div>
+                                <div class="text-xs text-slate-400">最大盈利</div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="showPage('strategy-v17')" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-white font-medium transition-colors">
+                            <i class="fas fa-crown mr-2"></i>查看杯柄大师版完整报告
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- 回测汇总 -->
@@ -872,8 +911,30 @@
                 <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
                     <i class="fas fa-arrow-left text-slate-400"></i>
                 </button>
-                <h2 class="text-2xl font-bold text-white">杯柄突破预警策略 v1.0</h2>
-                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-sm">最新</span>
+                <h2 class="text-2xl font-bold text-white">形态筛选版 (v1.0)</h2>
+                <span class="px-2 py-1 bg-slate-600/50 text-slate-400 rounded text-sm">历史版本</span>
+            </div>
+
+            <!-- 提示：已进化 -->
+            <div class="glass-card rounded-xl p-6 mb-6 border border-slate-600/30">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-600/20 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-history text-slate-400 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-white mb-2">该版本为历史版本</h3>
+                        <p class="text-slate-400 mb-4">形态筛选版 (v1.0) 条件过于严格（形态+成交量双重过滤），三年回测未发现信号。后续已进化为专家经验版和杯柄大师版。</p>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="showPage('strategy-v11')" class="px-4 py-2 bg-purple-600/80 hover:bg-purple-600 rounded-lg text-white text-sm transition-colors">
+                                查看专家经验版
+                            </button>
+                            <button onclick="showPage('strategy-v17')" class="px-4 py-2 bg-yellow-600/80 hover:bg-yellow-600 rounded-lg text-white text-sm transition-colors">
+                                查看杯柄大师版
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- 回测汇总 -->
@@ -1041,6 +1102,175 @@
         </div>
 
         <!-- 早报详情页 -->
+
+        <!-- v1.7 策略完整报告页 -->
+        <div id="page-strategy-v17" class="hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
+                    <i class="fas fa-arrow-left text-slate-400"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-white">杯柄大师版 (v1.7)</h2>
+                <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-sm">✅ 推荐</span>
+            </div>
+
+            <!-- 核心指标 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">总信号数</div>
+                    <div class="text-3xl font-bold text-white">195</div>
+                    <div class="text-xs text-green-400">✅ 达标</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">胜率</div>
+                    <div class="text-3xl font-bold text-green-400">40.5%</div>
+                    <div class="text-xs text-slate-500">79/195</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">平均收益</div>
+                    <div class="text-3xl font-bold text-green-400">+1.27%</div>
+                    <div class="text-xs text-slate-500">20天持有期</div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <div class="text-sm text-slate-400 mb-1">最大盈利</div>
+                    <div class="text-3xl font-bold text-yellow-400">+103.55%</div>
+                    <div class="text-xs text-slate-500">超捷股份</div>
+                </div>
+            </div>
+
+            <!-- 收益率分布图 -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-white"><i class="fas fa-chart-bar mr-2 text-blue-400"></i>收益率分布</h3>
+                    <div class="flex gap-2">
+                        <span class="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded">盈利 79</span>
+                        <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded">亏损 116</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-5 gap-2 text-center text-sm">
+                    <div class="p-3 bg-red-500/20 rounded">
+                        <div class="text-red-400 font-bold">≤-10%</div>
+                        <div class="text-slate-400 text-xs">28个</div>
+                    </div>
+                    <div class="p-3 bg-red-400/20 rounded">
+                        <div class="text-red-300 font-bold">-10~-5%</div>
+                        <div class="text-slate-400 text-xs">35个</div>
+                    </div>
+                    <div class="p-3 bg-slate-700/50 rounded">
+                        <div class="text-slate-300 font-bold">-5~0%</div>
+                        <div class="text-slate-400 text-xs">53个</div>
+                    </div>
+                    <div class="p-3 bg-green-400/20 rounded">
+                        <div class="text-green-300 font-bold">0~10%</div>
+                        <div class="text-slate-400 text-xs">58个</div>
+                    </div>
+                    <div class="p-3 bg-green-500/20 rounded">
+                        <div class="text-green-400 font-bold">>10%</div>
+                        <div class="text-slate-400 text-xs">21个</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收益排行榜 -->
+            <div class="glass-card rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-white"><i class="fas fa-trophy mr-2 text-yellow-400"></i>收益排行榜 TOP 20</h3>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-700">
+                                <th class="text-left py-2">排名</th>
+                                <th class="text-left">股票</th>
+                                <th class="text-left">日期</th>
+                                <th class="text-left">类型</th>
+                                <th class="text-right">买入</th>
+                                <th class="text-right">卖出</th>
+                                <th class="text-right">收益率</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-300">
+                            <tr class="border-b border-slate-800">
+                                <td class="py-2"><span class="text-yellow-400">1</span></td>
+                                <td>超捷股份</td>
+                                <td>2025-12-17</td>
+                                <td><span class="text-green-400">确认</span></td>
+                                <td class="text-right">92.85</td>
+                                <td class="text-right">189.00</td>
+                                <td class="text-right text-green-400 font-bold">+103.55%</td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-2"><span class="text-yellow-400">2</span></td>
+                                <td>美力科技</td>
+                                <td>2025-02-25</td>
+                                <td><span class="text-green-400">确认</span></td>
+                                <td class="text-right">16.77</td>
+                                <td class="text-right">27.30</td>
+                                <td class="text-right text-green-400 font-bold">+62.79%</td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-2"><span class="text-yellow-400">3</span></td>
+                                <td>横河精密</td>
+                                <td>2025-09-02</td>
+                                <td><span class="text-green-400">确认</span></td>
+                                <td class="text-right">29.01</td>
+                                <td class="text-right">46.68</td>
+                                <td class="text-right text-green-400 font-bold">+60.91%</td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-2">4</td>
+                                <td>招商轮船</td>
+                                <td>2026-01-30</td>
+                                <td><span class="text-green-400">确认</span></td>
+                                <td class="text-right">10.79</td>
+                                <td class="text-right">16.24</td>
+                                <td class="text-right text-green-400">+50.51%</td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-2">5</td>
+                                <td>唐源电气</td>
+                                <td>2025-02-25</td>
+                                <td><span class="text-green-400">确认</span></td>
+                                <td class="text-right">18.55</td>
+                                <td class="text-right">27.49</td>
+                                <td class="text-right text-green-400">+48.19%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <a href="https://github.com/mengda0231/trend-analysis-lens/blob/main/data/return_report_v17_20260321.csv" 
+                       target="_blank" class="text-sm text-blue-400 hover:text-blue-300">
+                        <i class="fas fa-download mr-1"></i>下载完整报告 (CSV)
+                    </a>
+                </div>
+            </div>
+
+            <!-- 策略参数详情 -->
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-semibold text-white mb-4"><i class="fas fa-cogs mr-2 text-purple-400"></i>v1.7 策略参数</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="p-3 bg-slate-800/50 rounded">
+                        <div class="text-slate-400">杯深</div>
+                        <div class="text-white">8% - 40%</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/50 rounded">
+                        <div class="text-slate-400">底部涨幅</div>
+                        <div class="text-white">15% - 150%</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/50 rounded">
+                        <div class="text-slate-400">回调/涨幅</div>
+                        <div class="text-white">≤ 80%</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/50 rounded">
+                        <div class="text-slate-400">底部震荡</div>
+                        <div class="text-white">≥45天, <30%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="page-morning-report" class="hidden">
             <div class="flex items-center gap-4 mb-6">
                 <button onclick="showPage('dashboard')" class="p-2 hover:bg-slate-700 rounded-lg">
