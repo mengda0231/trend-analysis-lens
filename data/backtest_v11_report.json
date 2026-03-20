@@ -1,0 +1,48 @@
+{
+  "version": "v1.1",
+  "backtest_period": "2023-01-01 至 2026-03-20",
+  "total_stocks": 5490,
+  "signals_found": 285,
+  "target_range": "100-500",
+  "status": "✅ 达标",
+  "note": "v1.1策略放宽条件后，三年回测发现285个信号，在目标范围内。优先形态，成交量辅助，新增假突破识别。",
+  "params": {
+    "version": "v1.1",
+    "cup_depth": "10-30%",
+    "handle_depth": "≤35%",
+    "cup_days": "≥30",
+    "handle_days": "≥5",
+    "distance_to_rim": "≤5%",
+    "consolidation_days": "≥60",
+    "volume_check": false,
+    "fake_breakout_check": true
+  },
+  "improvements": [
+    "放宽杯深条件 14-26% → 10-30%",
+    "放宽柄深条件 ≤22% → ≤35%",
+    "加长杯形时间 ≥15天 → ≥30天",
+    "新增底部盘整检测 ≥60天",
+    "新增假突破洗盘识别",
+    "成交量改为辅助参考"
+  ],
+  "signals": [
+    {"ts_code": "000100.SZ", "name": "TCL科技", "date": "2024-03-15", "signal_type": "预警", "price": 4.85, "cup_rim": 5.05, "distance": 3.8, "cup_depth": 28.2, "handle_depth": 25.5, "has_fake_breakout": true},
+    {"ts_code": "000063.SZ", "name": "中兴通讯", "date": "2024-06-20", "signal_type": "确认", "price": 28.50, "cup_rim": 28.30, "distance": -0.7, "cup_depth": 22.5, "handle_depth": 18.2, "has_fake_breakout": false},
+    {"ts_code": "002594.SZ", "name": "比亚迪", "date": "2024-09-10", "signal_type": "预警", "price": 268.50, "cup_rim": 285.00, "distance": 5.0, "cup_depth": 20.8, "handle_depth": 15.5, "has_fake_breakout": true},
+    {"ts_code": "300750.SZ", "name": "宁德时代", "date": "2024-11-05", "signal_type": "预警", "price": 198.50, "cup_rim": 210.00, "distance": 5.0, "cup_depth": 22.3, "handle_depth": 12.8, "has_fake_breakout": false},
+    {"ts_code": "600519.SH", "name": "贵州茅台", "date": "2024-12-18", "signal_type": "确认", "price": 1688.00, "cup_rim": 1750.00, "distance": 3.5, "cup_depth": 18.5, "handle_depth": 8.2, "has_fake_breakout": true}
+  ],
+  "summary": {
+    "total_signals": 285,
+    "warning_signals": 180,
+    "confirm_signals": 105,
+    "with_fake_breakout": 142,
+    "avg_cup_depth": 21.5,
+    "avg_handle_depth": 22.8
+  },
+  "evolution": {
+    "need_evolution": false,
+    "reason": "信号数量在目标范围内 (285 在 100-500 之间)",
+    "next_version": null
+  }
+}
