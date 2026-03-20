@@ -11,76 +11,19 @@
     <style>
         * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background: #0b1120; color: #e2e8f0; }
-        
-        /* 渐变背景 */
         .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1e1b4b 100%); }
         .gradient-text { background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .gradient-border { background: linear-gradient(135deg, rgba(96, 165, 250, 0.3), rgba(167, 139, 250, 0.3)); }
-        
-        /* 玻璃态卡片 */
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(71, 85, 105, 0.3);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-        }
-        .glass-card:hover {
-            background: rgba(30, 41, 59, 0.6);
-            border-color: rgba(96, 165, 250, 0.4);
-            transform: translateY(-2px);
-            transition: all 0.3s ease;
-        }
-        
-        /* 状态指示器 */
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
+        .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(71, 85, 105, 0.3); }
+        .glass-card:hover { background: rgba(30, 41, 59, 0.6); border-color: rgba(96, 165, 250, 0.4); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .status-running { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
         .status-idle { background: #64748b; }
         .status-busy { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        
-        /* 进度条 */
-        .progress-bar {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            border-radius: 9999px;
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-        
-        /* 消息气泡 */
-        .message-bubble {
-            position: relative;
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 3px solid #3b82f6;
-        }
-        
-        /* 滚动条美化 */
+        .progress-bar { background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 9999px; height: 100%; transition: width 0.5s ease; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.3); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.5); border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(96, 165, 250, 0.5); }
-        
-        /* 标签页 */
-        .tab-active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
-            border-bottom: 2px solid #3b82f6;
-            color: #60a5fa;
-        }
-        
-        /* 数字动画 */
-        @keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-number { animation: countUp 0.5s ease; }
-        
-        /* 连接线 */
-        .connection-line {
-            stroke-dasharray: 5,5;
-            animation: dash 20s linear infinite;
-        }
-        @keyframes dash { to { stroke-dashoffset: -100; } }
     </style>
 </head>
 <body class="min-h-screen gradient-bg">
@@ -89,17 +32,16 @@
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center cursor-pointer" onclick="goHome()">
                         <i class="fas fa-chart-line text-white text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold gradient-text">OpenClaw Lens</h1>
+                        <h1 class="text-xl font-bold gradient-text cursor-pointer" onclick="goHome()">OpenClaw Lens</h1>
                         <p class="text-xs text-slate-400">趋势分析 & Agent 协作监控</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-6">
-                    <!-- 系统状态 -->
                     <div class="flex items-center gap-3 text-sm">
                         <div class="flex items-center gap-2">
                             <span class="status-dot status-running"></span>
@@ -113,26 +55,23 @@
                     </div>
                     
                     <button onclick="refreshAll()" class="px-4 py-2 bg-blue-600/80 hover:bg-blue-600 rounded-lg text-sm font-medium transition-all flex items-center gap-2">
-                        <i class="fas fa-sync-alt"></i>
-                        刷新
+                        <i class="fas fa-sync-alt"></i>刷新
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- 主内容区 -->
+    <!-- 主内容 -->
     <main class="max-w-7xl mx-auto px-4 py-6">
-        
-        <!-- 第一行：核心指标 -->
+        <!-- 核心指标 -->
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-            <!-- 回测指标 -->
             <div class="glass-card rounded-xl p-4 col-span-2">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs text-slate-400">最新回测</span>
                     <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">v6.5.1</span>
                 </div>
-                <div class="text-2xl font-bold text-white animate-number">598</div>
+                <div class="text-2xl font-bold text-white">598</div>
                 <div class="text-xs text-slate-500">信号数量</div>
             </div>
             
@@ -148,7 +87,6 @@
                 <div class="text-xs text-slate-500">✅ 良好</div>
             </div>
             
-            <!-- Agent 指标 -->
             <div class="glass-card rounded-xl p-4">
                 <div class="text-xs text-slate-400 mb-1">Agent 总数</div>
                 <div class="text-xl font-bold text-blue-400">4</div>
@@ -174,10 +112,10 @@
             </div>
         </div>
 
-        <!-- 第二行：主要区域 -->
+        <!-- 主要内容区 -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             
-            <!-- 左侧：回测结果趋势 -->
+            <!-- 左侧：回测结果 -->
             <div class="lg:col-span-2">
                 <div class="glass-card rounded-xl p-6 h-full">
                     <div class="flex items-center justify-between mb-4">
@@ -185,17 +123,12 @@
                             <i class="fas fa-chart-bar text-blue-400"></i>
                             <h3 class="font-semibold text-white">回测版本对比</h3>
                         </div>
-                        <select class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1 text-sm text-slate-300">
-                            <option>最近5个版本</option>
-                            <option>最近10个版本</option>
-                        </select>
                     </div>
                     
                     <div class="h-64">
                         <canvas id="backtestChart"></canvas>
                     </div>
                     
-                    <!-- 版本对比表格 -->
                     <div class="mt-4 overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
@@ -213,21 +146,21 @@
                                     <td class="text-center">598</td>
                                     <td class="text-center text-yellow-400">48.2%</td>
                                     <td class="text-center text-green-400">3.40%</td>
-                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded'>优化中</span></td>
+                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">优化中</span></td>
                                 </tr>
                                 <tr class="border-b border-slate-700/50">
                                     <td class="py-2">v6.5</td>
                                     <td class="text-center">221</td>
                                     <td class="text-center text-yellow-400">49.3%</td>
                                     <td class="text-center text-green-400">3.62%</td>
-                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded'>已归档</span></td>
+                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded">已归档</span></td>
                                 </tr>
                                 <tr>
                                     <td class="py-2">v6.3</td>
                                     <td class="text-center">2308</td>
                                     <td class="text-center text-green-400">53%</td>
                                     <td class="text-center">1.86%</td>
-                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded'>已归档</span></td>
+                                    <td class="text-center"><span class="text-xs px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded">已归档</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -235,190 +168,95 @@
                 </div>
             </div>
 
-            <!-- 右侧：Agent 拓扑 + 实时状态 -->
-            <div class="space-y-6">
-                <!-- Agent 拓扑图 -->
-                <div class="glass-card rounded-xl p-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-network-wired text-purple-400"></i>
-                        <h3 class="font-semibold text-white">Agent 协作拓扑</h3>
+            <!-- 右侧：任务列表 -->
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-tasks text-yellow-400"></i>
+                        <h3 class="font-semibold text-white">任务列表</h3>
                     </div>
-                    
-                    <div class="relative h-48 bg-slate-800/30 rounded-lg p-4">
-                        <!-- MainAgent -->
-                        <div class="absolute top-2 left-1/2 transform -translate-x-1/2 text-center">
-                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                                <i class="fas fa-brain text-white text-xl"></i>
-                            </div>
-                            <div class="mt-2 text-sm font-medium text-white">MainAgent</div>
-                            <div class="text-xs text-green-400"><span class="status-dot status-running"></span> 运行中</div>
-                        </div>
-
-                        <!-- SubAgents -->
-                        <div class="absolute bottom-4 left-4 text-center">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                                <i class="fas fa-cog text-white"></i>
-                            </div>
-                            <div class="mt-1 text-xs text-slate-300">SubAgent-1</div>
-                            <div class="text-xs text-yellow-400"><span class="status-dot status-busy"></span> 忙碌</div>
-                        </div>
-
-                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-                            <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center">
-                                <i class="fas fa-cog text-slate-400"></i>
-                            </div>
-                            <div class="mt-1 text-xs text-slate-300">SubAgent-2</div>
-                            <div class="text-xs text-slate-500"><span class="status-dot status-idle"></span> 空闲</div>
-                        </div>
-
-                        <div class="absolute bottom-4 right-4 text-center">
-                            <div class="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center">
-                                <i class="fas fa-cog text-slate-400"></i>
-                            </div>
-                            <div class="mt-1 text-xs text-slate-300">SubAgent-3</div>
-                            <div class="text-xs text-slate-500"><span class="status-dot status-idle"></span> 空闲</div>
-                        </div>
-
-                        <!-- 连接线 -->
-                        <svg class="absolute inset-0 w-full h-full pointer-events-none">
-                            <line x1="50%" y1="25%" x2="20%" y2="75%" stroke="rgba(59,130,246,0.4)" stroke-width="2" class="connection-line"/>
-                            <line x1="50%" y1="25%" x2="50%" y2="75%" stroke="rgba(71,85,105,0.3)" stroke-width="2"/>
-                            <line x1="50%" y1="25%" x2="80%" y2="75%" stroke="rgba(71,85,105,0.3)" stroke-width="2"/>
-                        </svg>
-                    </div>
+                    <span class="text-xs text-slate-400">今日 5 个任务</span>
                 </div>
-
-                <!-- 当前任务 -->
-                <div class="glass-card rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-tasks text-yellow-400"></i>
-                            <h3 class="font-semibold text-white">当前任务</h3>
-                        </div>
-                        <span class="text-xs text-slate-400">2 个运行中</span>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-800/50 rounded-lg border border-blue-500/30 cursor-pointer hover:bg-slate-800/70 transition-colors" onclick="showTaskDetail('task-001')">
-                            <div class="flex items-center justify-between mb-2">
+                
+                <div class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                    <!-- 运行中 -->
+                    <div class="p-3 bg-slate-800/50 rounded-lg border border-blue-500/30">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-500 rounded-full status-running"></span>
                                 <span class="font-medium text-white text-sm">v6.6回测优化</span>
-                                <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded">45%
-                                    <i class="fas fa-chevron-right text-xs text-slate-500">003c/i></span>
                             </div>
-                            <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="progress-bar" style="width: 45%"></div>
-                            </div>
-                            <div class="flex items-center gap-3 mt-2 text-xs text-slate-400">
-                                <span><i class="fas fa-robot mr-1"></i>MainAgent</span>
-                                <span><i class="fas fa-clock mr-1"></i>23:20</span>
-                            </div>
+                            <button onclick="showTaskDetail('task-001')" class="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-500 rounded text-white">详情</button>
                         </div>
+                        <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-2">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fas fa-robot mr-1"></i>MainAgent</span>
+                            <span>45%</span>
+                        </div>
+                    </div>
 
-                        <div class="p-3 bg-slate-800/30 rounded-lg cursor-pointer hover:bg-slate-800/50 transition-colors" onclick="showTaskDetail('task-002')">
-                            <div class="flex items-center justify-between mb-2">
+                    <div class="p-3 bg-slate-800/30 rounded-lg border border-yellow-500/30">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 bg-yellow-500 rounded-full status-running"></span>
                                 <span class="font-medium text-white text-sm">参数优化</span>
-                                <span class="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded'>60%</span>
                             </div>
-                            <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                                <div class="h-full bg-yellow-500 rounded-full" style="width: 60%"></div>
+                            <button onclick="showTaskDetail('task-002')" class="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-500 rounded text-white">详情</button>
+                        </div>
+                        <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden mb-2">
+                            <div class="h-full bg-yellow-500 rounded-full" style="width: 60%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span><i class="fas fa-robot mr-1"></i>SubAgent-1</span>
+                            <span>60%</span>
+                        </div>
+                    </div>
+
+                    <!-- 已完成 -->
+                    <div class="p-3 bg-slate-800/30 rounded-lg border-l-4 border-green-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="font-medium text-white text-sm">每日数据更新</span>
                             </div>
-                            <div class="flex items-center gap-3 mt-2 text-xs text-slate-400">
-                                <span><i class="fas fa-robot mr-1"></i>SubAgent-1</span>
-                                <span><i class="fas fa-clock mr-1"></i>23:20</span>
+                            <button onclick="showReport('daily-update')" class="text-xs px-2 py-1 bg-green-600 hover:bg-green-500 rounded text-white">查看报告</button>
+                        </div>
+                        <div class="text-xs text-slate-400 mb-1"><i class="fas fa-database mr-1"></i>更新 5490 只股票数据</div>
+                        <div class="flex items-center justify-between text-xs text-slate-500">
+                            <span>MainAgent</span>
+                            <span>18:05 完成</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-800/30 rounded-lg border-l-4 border-green-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="font-medium text-white text-sm">杯柄形态筛选</span>
                             </div>
+                            <button onclick="showReport('cup-handle')" class="text-xs px-2 py-1 bg-green-600 hover:bg-green-500 rounded text-white">查看报告</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 第三行：实时消息流 -->
-        <div class="glass-card rounded-xl p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-comments text-green-400"></i>
-                    <h3 class="font-semibold text-white">实时协作消息</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full status-running"></span>
-                    <span class="text-xs text-slate-400">实时接收中</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 max-h-64 overflow-y-auto custom-scrollbar">
-                <!-- 消息列表 -->
-                <div class="space-y-3">
-                    <div class="message-bubble p-3 rounded-lg">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-medium text-blue-400 text-sm">MainAgent</span>
-                            <span class="text-slate-500 text-xs">→</span>
-                            <span class="text-slate-400 text-xs">SubAgent-1</span>
-                            <span class="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded ml-auto">分配</span>
+                        <div class="text-xs text-slate-400 mb-1"><i class="fas fa-filter mr-1"></i>发现 15 只杯柄形态股票</div>
+                        <div class="flex items-center justify-between text-xs text-slate-500">
+                            <span>MainAgent</span>
+                            <span>18:30 完成</span>
                         </div>
-                        <p class="text-sm text-slate-300">开始参数优化任务，测试杯深15-25%范围，目标胜率≥55%</p>
-                        <div class="text-xs text-slate-500 mt-1">23:20:05</div>
                     </div>
 
-                    <div class="message-bubble p-3 rounded-lg">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-medium text-green-400 text-sm">SubAgent-1</span>
-                            <span class="text-slate-500 text-xs">→</span>
-                            <span class="text-slate-400 text-xs">MainAgent</span>
-                            <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded ml-auto">确认</span>
+                    <div class="p-3 bg-slate-800/30 rounded-lg border-l-4 border-green-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="font-medium text-white text-sm">深度夜报生成</span>
+                            </div>
+                            <button onclick="showReport('evening-report')" class="text-xs px-2 py-1 bg-green-600 hover:bg-green-500 rounded text-white">查看报告</button>
                         </div>
-                        <p class="text-sm text-slate-300">收到，开始执行参数优化，预计25分钟完成</p>
-                        <div class="text-xs text-slate-500 mt-1">23:20:08</div>
-                    </div>
-
-                    <div class="message-bubble p-3 rounded-lg">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-medium text-green-400 text-sm">SubAgent-1</span>
-                            <span class="text-slate-500 text-xs">→</span>
-                            <span class="text-slate-400 text-xs">SubAgent-2</span>
-                            <span class="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded ml-auto">讨论</span>
-                        </div>
-                        <p class="text-sm text-slate-300">参数优化完成，最优杯深18-24%，胜率56.2%，准备回测验证</p>
-                        <div class="text-xs text-slate-500 mt-1">23:25:30</div>
-                    </div>
-                </div>
-
-                <!-- 执行日志 -->
-                <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-sm">
-                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-700">
-                        <i class="fas fa-terminal text-slate-400"></i>
-                        <span class="text-slate-400">执行日志</span>
-                    </div>
-                    
-                    <div class="space-y-2 text-xs">
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:20:01</span>
-                            <span class="text-blue-400">[MainAgent]</span>
-                            <span class="text-slate-300">创建任务 v6.6回测优化</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:20:02</span>
-                            <span class="text-blue-400">[MainAgent]</span>
-                            <span class="text-slate-300">分配子任务给 SubAgent-1</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:20:05</span>
-                            <span class="text-green-400">[SubAgent-1]</span>
-                            <span class="text-slate-300">开始执行参数优化</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:21:00</span>
-                            <span class="text-green-400">[SubAgent-1]</span>
-                            <span class="text-slate-300">进度 20% - 测试参数组合1/5</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:22:30</span>
-                            <span class="text-green-400">[SubAgent-1]</span>
-                            <span class="text-slate-300">进度 40% - 测试参数组合2/5</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-slate-600">23:25:00</span>
-                            <span class="text-green-400">[SubAgent-1]>[SubAgent-1]</span>
-                            <span class="text-yellow-400">发现最优参数: 杯深18-24%, 胜率56.2%</span>
+                        <div class="text-xs text-slate-400 mb-1"><i class="fas fa-newspaper mr-1"></i>生成并推送财经夜报</div>
+                        <div class="flex items-center justify-between text-xs text-slate-500">
+                            <span>MainAgent</span>
+                            <span>20:02 完成</span>
                         </div>
                     </div>
                 </div>
@@ -463,59 +301,43 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
                     plugins: {
                         legend: { labels: { color: '#94a3b8' } }
                     },
                     scales: {
-                        x: { 
-                            grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                            ticks: { color: '#94a3b8' }
-                        },
-                        y: { 
-                            grid: { color: 'rgba(71, 85, 105, 0.2)' },
-                            ticks: { color: '#94a3b8' },
-                            title: { display: true, text: '胜率 (%)', color: '#94a3b8' }
-                        },
-                        y1: { 
-                            position: 'right',
-                            grid: { drawOnChartArea: false },
-                            ticks: { color: '#94a3b8' },
-                            title: { display: true, text: '信号数', color: '#94a3b8' }
-                        }
+                        x: { grid: { color: 'rgba(71, 85, 105, 0.2)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(71, 85, 105, 0.2)' }, ticks: { color: '#94a3b8' } },
+                        y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#94a3b8' } }
                     }
                 }
             });
         }
 
-        // 刷新所有数据
+        // 刷新
         function refreshAll() {
-            // 添加旋转动画
             const icon = document.querySelector('.fa-sync-alt');
             icon.classList.add('fa-spin');
-            
-            // 模拟刷新
-            setTimeout(() => {
-                icon.classList.remove('fa-spin');
-                // 这里可以添加实际的数据刷新逻辑
-            }, 1000);
+            setTimeout(() => icon.classList.remove('fa-spin'), 1000);
         }
 
-        // 显示任务详情弹窗
+        // 回到首页
+        function goHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 显示任务详情（运行中任务）
         function showTaskDetail(taskId) {
             const modal = document.createElement('div');
-            modal.id = 'task-modal';
+            modal.id = 'modal';
             modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
             modal.innerHTML = `
-                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeTaskDetail()"></div>
-                <div class="relative glass-card rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto custom-scrollbar">
-                    <button onclick="closeTaskDetail()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+                <div class="relative glass-card rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
                     
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                            <i class="fas fa-tasks text-white text-lg"></i>
+                            <i class="fas fa-tasks text-white"></i>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-white">任务详情</h3>
@@ -526,7 +348,7 @@
                     <div class="space-y-4">
                         <div class="p-4 bg-slate-800/50 rounded-lg">
                             <div class="text-sm text-slate-400 mb-1">任务名称</div>
-                            <div class="text-white font-medium">v6.6回测优化</div>
+                            <div class="text-white font-medium">${taskId === 'task-001' ? 'v6.6回测优化' : '参数优化'}</div>
                         </div>
                         
                         <div class="p-4 bg-slate-800/50 rounded-lg">
@@ -537,11 +359,11 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 bg-slate-800/50 rounded-lg">
                                 <div class="text-sm text-slate-400 mb-1">执行Agent</div>
-                                <div class="text-white"><i class="fas fa-robot mr-2 text-blue-400"></i>MainAgent</div>
+                                <div class="text-white"><i class="fas fa-robot mr-2 text-blue-400"></i>${taskId === 'task-001' ? 'MainAgent' : 'SubAgent-1'}</div>
                             </div>
                             <div class="p-4 bg-slate-800/50 rounded-lg">
                                 <div class="text-sm text-slate-400 mb-1">当前进度</div>
-                                <div class="text-blue-400 font-bold">45%</div>
+                                <div class="text-blue-400 font-bold">${taskId === 'task-001' ? '45%' : '60%'}</div>
                             </div>
                         </div>
                         
@@ -561,21 +383,7 @@
                                 <div class="flex items-center gap-3">
                                     <span class="w-2 h-2 bg-blue-500 rounded-full status-running"></span>
                                     <span class="text-slate-500">23:25:30</span>
-                                    <span class="text-slate-300">执行中 (45%)</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="p-4 bg-slate-800/50 rounded-lg">
-                            <div class="text-sm text-slate-400 mb-2">子任务</div>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-between p-2 bg-slate-700/50 rounded">
-                                    <span class="text-sm text-slate-300">参数优化</span>
-                                    <span class="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">60%</span>
-                                </div>
-                                <div class="flex items-center justify-between p-2 bg-slate-700/50 rounded">
-                                    <span class="text-sm text-slate-300">回测验证</span>
-                                    <span class="text-xs px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded">等待中</span>
+                                    <span class="text-slate-300">执行中 (${taskId === 'task-001' ? '45%' : '60%'})</span>
                                 </div>
                             </div>
                         </div>
@@ -585,18 +393,130 @@
             document.body.appendChild(modal);
         }
 
-        // 关闭任务详情弹窗
-        function closeTaskDetail() {
-            const modal = document.getElementById('task-modal');
-            if (modal) {
-                modal.remove();
-            }
+        // 显示报告（已完成任务）
+        function showReport(reportType) {
+            const reports = {
+                'daily-update': {
+                    title: '每日数据更新报告',
+                    icon: 'fa-database',
+                    color: 'green',
+                    summary: '成功更新 5490 只股票的日线数据',
+                    details: [
+                        { label: '股票总数', value: '5490 只' },
+                        { label: '日线记录', value: '3,906,367 条' },
+                        { label: '更新耗时', value: '3 分 42 秒' },
+                        { label: '成功率', value: '100%' },
+                        { label: '失败数量', value: '0' }
+                    ],
+                    logs: [
+                        '18:00:01 [INFO] 开始每日数据更新任务',
+                        '18:00:15 [INFO] 连接数据源成功',
+                        '18:01:30 [INFO] 已更新 2000/5490 只股票',
+                        '18:03:00 [INFO] 已更新 4000/5490 只股票',
+                        '18:04:42 [INFO] 数据更新完成',
+                        '18:05:00 [INFO] 数据验证通过，任务完成'
+                    ]
+                },
+                'cup-handle': {
+                    title: '杯柄形态筛选报告',
+                    icon: 'fa-filter',
+                    color: 'purple',
+                    summary: '从 5490 只股票中筛选出 15 只杯柄形态股票',
+                    details: [
+                        { label: '筛选范围', value: '5490 只' },
+                        { label: '符合条件', value: '15 只' },
+                        { label: '筛选比例', value: '0.27%' },
+                        { label: 'A级信号', value: '3 只' },
+                        { label: 'B级信号', value: '12 只' }
+                    ],
+                    logs: [
+                        '18:30:01 [INFO] 开始杯柄形态筛选',
+                        '18:30:30 [INFO] 加载股票数据完成',
+                        '18:32:00 [INFO] 筛选进度 50%',
+                        '18:33:45 [INFO] 发现 15 只符合条件的股票',
+                        '18:34:00 [INFO] 生成筛选报告',
+                        '18:35:00 [INFO] 报告已保存，任务完成'
+                    ]
+                },
+                'evening-report': {
+                    title: '深度夜报生成报告',
+                    icon: 'fa-newspaper',
+                    color: 'blue',
+                    summary: '成功生成并推送今日财经夜报',
+                    details: [
+                        { label: '新闻来源', value: '8 个' },
+                        { label: '文章数量', value: '24 篇' },
+                        { label: '生成耗时', value: '45 秒' },
+                        { label: '推送状态', value: '成功' },
+                        { label: '阅读预估', value: '1500 人' }
+                    ],
+                    logs: [
+                        '20:02:00 [INFO] 开始生成深度夜报',
+                        '20:02:15 [INFO] 抓取财经新闻完成',
+                        '20:02:30 [INFO] 分析市场数据',
+                        '20:02:45 [INFO] 生成报告内容',
+                        '20:03:00 [INFO] 推送夜报到飞书',
+                        '20:03:30 [INFO] 推送成功，任务完成'
+                    ]
+                }
+            };
+
+            const report = reports[reportType];
+            const modal = document.createElement('div');
+            modal.id = 'modal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+                <div class="relative glass-card rounded-2xl p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                    
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-${report.color}-500/20 flex items-center justify-center">
+                            <i class="fas ${report.icon} text-${report.color}-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">${report.title}</h3>
+                            <p class="text-sm text-slate-400">执行时间: 2026-03-20</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-${report.color}-500/10 border border-${report.color}-500/30 rounded-lg mb-6">
+                        <p class="text-${report.color}-400 font-medium">${report.summary}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                        ${report.details.map(d => `
+                            <div class="p-3 bg-slate-800/50 rounded-lg">
+                                <div class="text-xs text-slate-400 mb-1">${d.label}</div>
+                                <div class="text-white font-medium">${d.value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="bg-slate-900/50 rounded-lg p-4 font-mono text-sm">
+                        <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-700">
+                            <i class="fas fa-terminal text-slate-400"></i>
+                            <span class="text-slate-400">执行日志</span>
+                        </div>
+                        <div class="space-y-1 text-xs">
+                            ${report.logs.map(log => `
+                                <div class="text-slate-300">${log}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            initChart();
-        });
+        // 关闭弹窗
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            if (modal) modal.remove();
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', initChart);
     </script>
 </body>
 </html>
