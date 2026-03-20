@@ -243,6 +243,26 @@
             updateSortIcons(key);
         }
 
+        function applySort() {
+            // 只应用当前排序，不切换方向
+            const key = currentSort.key;
+            filteredSignals.sort((a, b) => {
+                let valA = a[key];
+                let valB = b[key];
+                
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+                
+                if (valA < valB) return currentSort.desc ? 1 : -1;
+                if (valA > valB) return currentSort.desc ? -1 : 1;
+                return 0;
+            });
+            
+            filteredSignals.forEach((s, i) => s.rank = i + 1);
+        }
+
         function updateSortIcons(activeKey) {
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 btn.classList.remove('sort-active');
@@ -270,8 +290,8 @@
                         s.ts_code.toLowerCase().includes(term)
                     );
                 }
-                // 保持当前排序
-                sortTable(currentSort.key);
+                // 保持当前排序（不切换方向）
+                applySort();
                 currentPage = 1;
                 renderTable();
             });
@@ -284,8 +304,8 @@
                 } else {
                     filteredSignals = allSignals.filter(s => s.type === type);
                 }
-                // 保持当前排序
-                sortTable(currentSort.key);
+                // 保持当前排序（不切换方向）
+                applySort();
                 currentPage = 1;
                 renderTable();
             });
