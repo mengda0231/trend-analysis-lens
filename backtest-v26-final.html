@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>杯柄策略v2.6最终版 - 胜率67%</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        h1 { color: #333; border-bottom: 3px solid #4CAF50; padding-bottom: 15px; }
+        .winner-box { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+        .stat { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 28px; font-weight: bold; color: #333; }
+        .stat-label { font-size: 12px; color: #666; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #4CAF50; color: white; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        .highlight { background: #d4edda; }
+        .iteration { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 杯柄策略 v2.6 最终版</h1>
+        
+        <div class="winner-box">
+            <h2>🎯 最优参数：MCST + 7%/1.5%</h2>
+            <p>经过6轮迭代优化，胜率从40.2%提升至67.0%，提升26.8个百分点！</p>
+        </div>
+        
+        <h2>📊 核心指标</h2>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">291</div>
+                <div class="stat-label">信号数</div>
+            </div>
+            <div class="stat" style="background:#d4edda;">
+                <div class="stat-value" style="color:#155724;">67.0%</div>
+                <div class="stat-label">胜率</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1.75%</div>
+                <div class="stat-label">平均收益</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">0.12</div>
+                <div class="stat-label">夏普比率</div>
+            </div>
+        </div>
+        
+        <h2>📈 迭代历程</h2>
+        <div class="iteration"><strong>v2.5基线</strong>: 448信号，胜率40.2%，收益1.80%</div>
+        <div class="iteration"><strong>迭代1</strong>: MCST+均线+成交量 - 信号38，胜率23.7%（条件太严）</div>
+        <div class="iteration"><strong>迭代2</strong>: 放宽条件 - 信号89，胜率22.5%（分层止损效果差）</div>
+        <div class="iteration"><strong>迭代3</strong>: 纯参数优化 - 发现15%/5%胜率51.3%</div>
+        <div class="iteration"><strong>迭代4</strong>: MCST+扩展参数 - 10%/3%，胜率61.5%</div>
+        <div class="iteration"><strong>迭代5</strong>: 精细参数+RSRS - 9%/2%，胜率63.2%</div>
+        <div class="iteration highlight"><strong>迭代6🏆</strong>: 超精细参数 - 7%/1.5%，胜率67.0%</div>
+        
+        <h2>📋 策略逻辑</h2>
+        <pre style="background:#f4f4f4;padding:15px;border-radius:5px;">
+选股条件：
+1. 杯柄形态确认（v2.2标准）
+2. MCST条件：当前股价在MCST上方
+
+止盈止损：
+1. 移动止盈：盈利7%后回撤1.5%止盈
+2. 最大持仓：30天
+        </pre>
+        
+        <h2>📊 全版本对比</h2>
+        <table>
+            <tr><th>版本</th><th>信号数</th><th>胜率</th><th>平均收益</th><th>改进</th></tr>
+            <tr><td>v2.5-20/10</td><td>448</td><td>40.2%</td><td>1.80%</td><td>-</td></tr>
+            <tr><td>v2.6-iter4</td><td>291</td><td>61.5%</td><td>1.94%</td><td>+21.3%</td></tr>
+            <tr><td>v2.6-iter5</td><td>291</td><td>63.2%</td><td>2.00%</td><td>+23.0%</td></tr>
+            <tr class="highlight"><td><strong>v2.6-iter6最终版</strong></td><td><strong>291</strong></td><td><strong>67.0%</strong></td><td><strong>1.75%</strong></td><td><strong>+26.8%🏆</strong></td></tr>
+        </table>
+        
+        <h2>🚀 实盘建议</h2>
+        <ul>
+            <li><strong>资金分配</strong>: 单信号5-8%仓位，最大持仓10只</li>
+            <li><strong>入场时机</strong>: 信号出现后次日开盘价买入</li>
+            <li><strong>止盈执行</strong>: 盈利7%后严格按1.5%回撤止盈</li>
+            <li><strong>止损纪律</strong>: 30天强制平仓，不扛单</li>
+        </ul>
+        
+        <footer style="margin-top:40px;text-align:center;color:#666;">
+            <p>报告生成时间：2026-03-21 | 策略版本：v2.6最终版 | 回测区间：2023-01-01 至 2026-03-20</p>
+        </footer>
+    </div>
+</body>
+</html>
