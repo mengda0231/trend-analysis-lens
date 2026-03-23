@@ -3,39 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw Lens</title>
-    <meta http-equiv="refresh" content="0; url=v26_full_backtest_report.html">
+    <title>OpenClaw Lens - 策略回测报告中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: #0b1120;
-            color: #e2e8f0;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
         }
-        .loading {
-            text-align: center;
+        .card {
+            transition: all 0.3s ease;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(59, 130, 246, 0.3);
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
-<body>
-    <div class="loading">
-        <div class="spinner"></div>
-        <p>正在加载 v2.6 全A股回测报告...</p>
-        <p><a href="v26_full_backtest_report.html" style="color: #3b82f6;">点击跳转</a></p>
+<body class="text-white">
+    <div class="container mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold mb-4 gradient-text">OpenClaw Lens</h1>
+            <p class="text-xl text-gray-400">杯柄形态策略回测报告中心</p>
+        </header>
+
+        <!-- Reports Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- v3.2 Report -->
+            <div class="card bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-green-500 text-xs font-bold px-2 py-1 rounded">最新</span>
+                    <span class="text-gray-400 text-sm">2026-03-23</span>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-green-400">v3.2 杯柄确认修复</h2>
+                <p class="text-gray-400 text-sm mb-4">突破比例1.03 + 3天确认 + 去重 + 成交量确认</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-green-400">54.55%</p>
+                        <p class="text-xs text-gray-400">胜率</p>
+                    </div>
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-green-400">5.94%</p>
+                        <p class="text-xs text-gray-400">平均收益</p>
+                    </div>
+                </div>
+                <a href="v32_cup_handle_fix_report.html" class="block w-full bg-green-600 hover:bg-green-500 text-white text-center py-3 rounded-lg font-bold transition">
+                    查看报告 →
+                </a>
+            </div>
+
+            <!-- v2.6 Report -->
+            <div class="card bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-blue-500 text-xs font-bold px-2 py-1 rounded">基准</span>
+                    <span class="text-gray-400 text-sm">2026-03-21</span>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-blue-400">v2.6 全A股回测</h2>
+                <p class="text-gray-400 text-sm mb-4">v2.2完整检测 + MCST过滤 + 7%/1.5%移动止盈</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-blue-400">60.9%</p>
+                        <p class="text-xs text-gray-400">胜率</p>
+                    </div>
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-blue-400">1.42%</p>
+                        <p class="text-xs text-gray-400">平均收益</p>
+                    </div>
+                </div>
+                <a href="v26_full_backtest_report.html" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-center py-3 rounded-lg font-bold transition">
+                    查看报告 →
+                </a>
+            </div>
+
+            <!-- Placeholder for future reports -->
+            <div class="card bg-gray-800 rounded-xl p-6 border border-gray-700 opacity-50">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="bg-gray-600 text-xs font-bold px-2 py-1 rounded">待添加</span>
+                    <span class="text-gray-500 text-sm">-</span>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-gray-500">更多报告</h2>
+                <p class="text-gray-500 text-sm mb-4">持续更新中...</p>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-gray-500">-</p>
+                        <p class="text-xs text-gray-500">胜率</p>
+                    </div>
+                    <div class="bg-gray-700 rounded p-3 text-center">
+                        <p class="text-2xl font-bold text-gray-500">-</p>
+                        <p class="text-xs text-gray-500">平均收益</p>
+                    </div>
+                </div>
+                <button disabled class="block w-full bg-gray-600 text-gray-400 text-center py-3 rounded-lg font-bold cursor-not-allowed">
+                    敬请期待
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>OpenClaw Lens | 数据仅供参考，不构成投资建议</p>
+        </footer>
     </div>
 </body>
 </html>
